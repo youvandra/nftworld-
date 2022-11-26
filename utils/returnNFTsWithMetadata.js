@@ -1,6 +1,6 @@
 import { returnNFTwithMetadata } from "./returnNFTWithMetadata";
 
-export async function returnNFTWithMetadata(rawNFTs) {
+export async function returnNFTsWithMetadata(rawNFTs) {
   const formatedNFTs = await Promise.all(
     rawNFTs.map(async (rawNFT) => await returnNFTwithMetadata(rawNFT))
   );
