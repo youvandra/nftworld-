@@ -65,7 +65,7 @@ const User = () => {
 
   return (
     <>
-      <Meta title="User || Xhibiter | NFT Marketplace Next.js Template" />
+      <Meta title="User || NFTWORLD | NFT Marketplace Next.js Template" />
       {/* <!-- Profile --> */}
 
       <div className="pt-[5.5rem] lg:pt-24">

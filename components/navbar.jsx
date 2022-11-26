@@ -72,12 +72,12 @@ const Navbar = () => {
 										<img
 											src="https://i.ibb.co/4pY6n2W/NFT-WORLD.png"
 											className="max-h-7 dark:hidden"
-											alt="Xhibiter | NFT Marketplace"
+											alt="NFTWORLD | NFT Marketplace"
 										/>
 										<img
 											src="https://i.ibb.co/Mp0mPny/NFT-WORLD-2.png"
 											className="hidden max-h-7 dark:block"
-											alt="Xhibiter | NFT Marketplace"
+											alt="NFTWORLD | NFT Marketplace"
 										/>
 									</a>
 								</Link>
@@ -108,7 +108,7 @@ const Navbar = () => {
 									<img
 										src="https://i.ibb.co/Mp0mPny/NFT-WORLD-2.png"
 										className="max-h-7 h-auto"
-										alt="Xhibiter | NFT Marketplace"
+										alt="NFTWORLD | NFT Marketplace"
 									/>
 								</a>
 							</Link>
@@ -236,12 +236,12 @@ const Navbar = () => {
 										<img
 											src="https://i.ibb.co/4pY6n2W/NFT-WORLD.png"
 											className="max-h-7 dark:hidden"
-											alt="Xhibiter | NFT Marketplace"
+											alt="NFTWORLD | NFT Marketplace"
 										/>
 										<img
 											src="https://i.ibb.co/Mp0mPny/NFT-WORLD-2.png"
 											className="hidden max-h-7 dark:block"
-											alt="Xhibiter | NFT Marketplace"
+											alt="NFTWORLD | NFT Marketplace"
 										/>
 									</a>
 								</Link>
@@ -269,7 +269,7 @@ const Navbar = () => {
 										<img
 											src="https://i.ibb.co/Mp0mPny/NFT-WORLD-2.png"
 											className="max-h-7 h-auto"
-											alt="Xhibiter | NFT Marketplace"
+											alt="NFTWORLD | NFT Marketplace"
 										/>
 									</a>
 								</Link>
@@ -281,7 +281,7 @@ const Navbar = () => {
 										<img
 											src="https://i.ibb.co/Mp0mPny/NFT-WORLD-2.png"
 											className="max-h-7 h-auto hidden dark:block"
-											alt="Xhibiter | NFT Marketplace"
+											alt="NFTWORLD | NFT Marketplace"
 										/>
 									</a>
 								</Link>
