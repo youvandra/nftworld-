@@ -26,13 +26,14 @@ const Auctions_categories = () => {
 
   useEffect(() => {
     getListings().then((listings) => {
+      console.log(listings);
       const formatedLisings = listings.map(
-        ({
-          mintAddress: id,
-          metadata: { image: bigImage },
-          name: title,
+        ({ address, metadata: { image: bigImage }, name: title, price }) => ({
+          id: address?.toBase58(),
+          bigImage,
+          title,
           price,
-        }) => ({ id, bigImage, title, price })
+        })
       );
       setData(formatedLisings);
     });
@@ -56,7 +57,7 @@ const Auctions_categories = () => {
                 title,
                 price,
               } = item;
-              const itemLink = `/${id}`;
+              const itemLink = `/item/${id}`;
               return (
                 <article key={id}>
                   <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
@@ -70,7 +71,7 @@ const Auctions_categories = () => {
                             </span>
                           }
                         >
-                          <Link href={/item/ + itemLink}>
+                          <Link href={itemLink}>
                             <a>
                               <img
                                 src={"creatorImage"}
@@ -89,7 +90,7 @@ const Auctions_categories = () => {
                             </span>
                           }
                         >
-                          <Link href={/item/ + itemLink}>
+                          <Link href={itemLink}>
                             <a>
                               <img
                                 src={"ownerImage"}
@@ -107,7 +108,7 @@ const Auctions_categories = () => {
                       <Auctions_dropdown classes="dark:hover:bg-jacarta-600 dropdown hover:bg-jacarta-100 rounded-full " />
                     </div>
                     <figure className="relative">
-                      <Link href={/item/ + itemLink}>
+                      <Link href={itemLink}>
                         <a>
                           <Image
                             src={bigImage}
@@ -123,7 +124,7 @@ const Auctions_categories = () => {
                       </Link>
                     </figure>
                     <div className="mt-7 flex items-center justify-between">
-                      <Link href={/item/ + itemLink}>
+                      <Link href={itemLink}>
                         <a>
                           <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
                             {title}

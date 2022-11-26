@@ -22,13 +22,12 @@ const Collection = () => {
 
   const { program } = useProgram(address);
 
-  const { data, isLoading } = useNFTs(program);
+  const { data: nfts, isLoading } = useNFTs(program);
 
   async function getCollection() {
     const { data } = await axios.get(
       `/api/getCollectionByAddress?address=${address}`
     );
-    console.log("collection:", data);
     if (!data) return;
     const formatedDetails = [
       { detailsNumber: data.itemsCount, detailsText: "Items" },
@@ -44,6 +43,7 @@ const Collection = () => {
       creatorAddress: data.creatorAddress,
       text: data.bio,
       details: formatedDetails,
+      banner: data.banner,
     };
     setCollection(fromatedCollection);
   }
