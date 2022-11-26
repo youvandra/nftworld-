@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+
+model User {
+  address String @id
+  name String @unique
+  bio String? @db.Text
+  email String? @unique
+  twitterHandle String? @unique
+  instagramName String? @unique
+  website String? @unique
+  profilePhoto String? @db.Text
+  coverPhoto String? @db.Text
+  collections Collection[]
+  featuredNFTs FeaturedNFT[]
+}
+
+model Collection {
+  address String @id
+  title String
+  image String
+  banner String 
+  description String @db.Text
+  creator User @relation(fields: [creatorAddress],references: [address])
+  creatorAddress String
+  isVerified Boolean @default(false)
+  floorPrice String
+  volumeTraded String
+  owners String //number of nft owners
+  itemsCount  String
+  category category
+  top Boolean @default(false)
+  tending Boolean @default(false)
+  recent Boolean @default(false)
+  bigImage String
+	subImage1 String
+	subImage2 String
+	subImage3 String
+	postTime String
+	postDate String
+}
+
+model FeaturedNFT {
+  address String @id
+  title String
+  img String
+  creator User @relation(fields: [creatorAddress],references: [address])
+  creatorAddress String
+}
+
+enum category {
+  art
+  Collectibles
+  photography
+  music
+  domain
+  
+}
