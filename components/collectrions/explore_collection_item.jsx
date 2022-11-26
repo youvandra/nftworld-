@@ -102,7 +102,7 @@ const Explore_collection_item = ({ itemFor }) => {
                 </a>
               </Link>
 
-              <Link href="/collection/avatar_1">
+              <Link href={`collection/${id}`}>
                 <a className="font-display hover:text-accent dark:hover:text-accent text-jacarta-700 mt-4 block text-base dark:text-white">
                   {title}
                 </a>

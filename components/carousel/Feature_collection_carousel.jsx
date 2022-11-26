@@ -89,7 +89,7 @@ const Feature_collections_carousel = () => {
             userName,
           } = item;
 
-          const itemLink = `/${id}`;
+          const itemLink = id;
 
           return (
             <SwiperSlide key={id}>

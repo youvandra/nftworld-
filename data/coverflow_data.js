@@ -8,10 +8,10 @@ export const coverflow_data = [
   },
   {
     img: "/images/products/item_16_lg.jpg",
-    title: "Oceania \\\\ OVERSEER 017",
+    title: "Oceania  OVERSEER 017",
     authorImage: "/images/avatars/avatar_22_rounded.jpg",
     authorName: "MadeByM1KE",
-    id: "1Oceania \\\\ OVERSEER 017",
+    id: "1Oceania  OVERSEER 017",
   },
   {
     img: "/images/products/item_12_lg.jpg",
@@ -43,10 +43,10 @@ export const coverflow_data = [
   },
   {
     img: "/images/products/item_16_lg.jpg",
-    title: "Oceania \\\\ OVERSEER 017",
+    title: "Oceania  OVERSEER 017",
     authorImage: "/images/avatars/avatar_22_rounded.jpg",
     authorName: "MadeByM1KE",
-    id: "6Oceania \\\\ OVERSEER 017",
+    id: "6Oceania  OVERSEER 017",
   },
   {
     img: "/images/products/item_12_lg.jpg",
@@ -78,10 +78,10 @@ export const coverflow_data = [
   },
   {
     img: "/images/products/item_16_lg.jpg",
-    title: "Oceania \\\\ OVERSEER 017",
+    title: "Oceania  OVERSEER 017",
     authorImage: "/images/avatars/avatar_22_rounded.jpg",
     authorName: "MadeByM1KE",
-    id: "11Oceania \\\\ OVERSEER 017",
+    id: "11Oceania  OVERSEER 017",
   },
   {
     img: "/images/products/item_12_lg.jpg",
@@ -116,10 +116,10 @@ export const hero_5_data = [
   },
   {
     img: "/images/products/item_12_2lg.jpg",
-    title: "Oceania \\\\ OVERSEER 017",
+    title: "Oceania  OVERSEER 017",
     authorImage: "/images/avatars/avatar_22_rounded.jpg",
     authorName: "MadeByM1KE",
-    id: "1Oceania \\\\ OVERSEER 017",
+    id: "1Oceania  OVERSEER 017",
 
     subItem: [
       {
