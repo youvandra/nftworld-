@@ -12,6 +12,7 @@ import Image from "next/image";
 import auctions_category_data from "../../data/auctions_category_data";
 import Likes from "../likes";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import axios from "axios";
 
 const Auctions_categories = () => {
   const dispatch = useDispatch();
@@ -25,15 +26,32 @@ const Auctions_categories = () => {
   };
 
   useEffect(() => {
-    getListings().then((listings) => {
-      console.log(listings);
-      const formatedLisings = listings.map(
-        ({ address, metadata: { image: bigImage }, name: title, price }) => ({
-          id: address?.toBase58(),
-          bigImage,
-          title,
-          price,
-        })
+    getListings().then(async (listings) => {
+      console.log(listings[0]);
+      const formatedLisings = await Promise.all(
+        listings.map(
+          async ({
+            address,
+            metadata: { image: bigImage },
+            name: title,
+            price,
+            creators,
+          }) => {
+            const { data: user } = await axios.get(
+              `api/getUserByAddress?address=${creators[0].address.toBase58()}`
+            );
+            console.log(user);
+            return {
+              id: address?.toBase58(),
+              bigImage,
+              title,
+              price,
+              creatorName: user.name,
+              creatorImage: user.profilePhoto,
+              creatorAddress: user.address,
+            };
+          }
+        )
       );
       setData(formatedLisings);
     });
@@ -53,9 +71,11 @@ const Auctions_categories = () => {
               const {
                 id,
                 bigImage,
-
                 title,
                 price,
+                creatorName,
+                creatorImage,
+                creatorAddress,
               } = item;
               const itemLink = `/item/${id}`;
               return (
@@ -67,33 +87,14 @@ const Auctions_categories = () => {
                           theme="tomato"
                           content={
                             <span className="py-1 px-2 block">
-                              Creator: Sussygirl
+                              Creator: {creatorName ?? "Sussygirl"}
                             </span>
                           }
                         >
-                          <Link href={itemLink}>
+                          <Link href={`/user/${creatorAddress ?? "#"}`}>
                             <a>
                               <img
-                                src={"creatorImage"}
-                                alt="creator"
-                                className="h-6 w-6 rounded-full"
-                                height={24}
-                                width={24}
-                              />
-                            </a>
-                          </Link>
-                        </Tippy>
-                        <Tippy
-                          content={
-                            <span className="py-1 px-2 block">
-                              Owner: Sussygirl
-                            </span>
-                          }
-                        >
-                          <Link href={itemLink}>
-                            <a>
-                              <img
-                                src={"ownerImage"}
+                                src={creatorImage ?? ""}
                                 alt="creator"
                                 className="h-6 w-6 rounded-full"
                                 height={24}
