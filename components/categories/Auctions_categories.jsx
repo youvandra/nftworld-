@@ -38,9 +38,8 @@ const Auctions_categories = () => {
             creators,
           }) => {
             const { data: user } = await axios.get(
-              `api/getUserByAddress?address=${creators[0].address.toBase58()}`
+              `/api/getUserByAddress?address=${creators[0].address.toBase58()}`
             );
-            console.log(user);
             return {
               id: address?.toBase58(),
               bigImage,
@@ -87,7 +86,7 @@ const Auctions_categories = () => {
                           theme="tomato"
                           content={
                             <span className="py-1 px-2 block">
-                              Creator: {creatorName ?? "Sussygirl"}
+                              Creator: {"Sussygirl"}
                             </span>
                           }
                         >

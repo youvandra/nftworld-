@@ -21,21 +21,25 @@ const Trending_categories_items = ({ type }) => {
 
   async function getOwnedNFTs() {
     const nfts = await getNFTsByOwner(address);
-    const formatedNFTs = nfts.map(({ address, name, metadata: { image } }) => ({
-      id: address,
-      title: name,
-      image,
-    }));
+    const formatedNFTs = nfts.map(
+      ({ mintAddress, name, metadata: { image } }) => ({
+        id: mintAddress,
+        title: name,
+        image,
+      })
+    );
     setItemdata(formatedNFTs);
   }
 
   async function getCreatedNFTs() {
     const nfts = await getNFTsByCreator(address);
-    const formatedNFTs = nfts.map(({ address, name, metadata: { image } }) => ({
-      id: address,
-      title: name,
-      image,
-    }));
+    const formatedNFTs = nfts.map(
+      ({ mintAddress, name, metadata: { image } }) => ({
+        id: mintAddress,
+        title: name,
+        image,
+      })
+    );
     setItemdata(formatedNFTs);
   }
 

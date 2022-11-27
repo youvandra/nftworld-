@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-const Collection_dropdown2 = ({
-  data,
-  collection,
-  handleChange = (_) => {},
-}) => {
+const CategoryDropdown = ({ data, collection, handleChange = (_) => {} }) => {
   const [dropdown, setDropdown] = useState(false);
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState("art");
   const handleDropdown = () => {
     window.addEventListener("click", (w) => {
       if (w.target.closest(".dropdown-toggle")) {
@@ -39,7 +35,7 @@ const Collection_dropdown2 = ({
           className="dark:bg-jacarta-700 dropdown-toggle border-jacarta-100 dark:border-jacarta-600 dark:text-jacarta-300 flex items-center justify-between rounded-lg border bg-white py-3 px-3 show z-50 relative"
           onClick={() => handleDropdown()}
         >
-          <span className="">Select collection</span>
+          <span className="">{activeItem}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -130,4 +126,4 @@ const Collection_dropdown2 = ({
   );
 };
 
-export default Collection_dropdown2;
+export default CategoryDropdown;

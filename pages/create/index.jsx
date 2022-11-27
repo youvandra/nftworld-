@@ -13,6 +13,10 @@ import { showPropatiesModal } from "../../redux/counterSlice";
 import Meta from "../../components/Meta";
 import { useForm } from "react-hook-form";
 import { useNFTs } from "../../metaplex/useNFTs";
+import axios from "axios";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useEffect } from "react";
+import { useProgram } from "@thirdweb-dev/react/solana";
 
 const Create = () => {
   const fileTypes = [
@@ -29,6 +33,11 @@ const Create = () => {
     "GLTF",
   ];
   const [file, setFile] = useState(null);
+  const [collections, setCollections] = useState(collectionDropdown2_data);
+  const [collectionAddress, setCollectionAddress] = useState();
+  const { program } = useProgram(
+    "GXMXatNsQ39Lh4KUmheG8UjccskUQcvy5DVEpukhcSVb"
+  );
 
   const dispatch = useDispatch();
 
@@ -54,12 +63,51 @@ const Create = () => {
   ];
 
   const { handleSubmit, register, setValue } = useForm();
-  const { createNFT } = useNFTs();
 
   const handleChange = (file) => {
     setFile(file);
-    setValue("file", file);
+    setValue("image", file);
   };
+
+  function handleCategory(col) {
+    setCollectionAddress(col);
+  }
+
+  const { publicKey } = useWallet();
+
+  async function getCollections() {
+    const { data } = await axios.get(
+      `/api/getMyCollections?creatorAddress=${publicKey.toBase58()}`
+    );
+    console.log(data);
+    if (!data) return;
+    const formatedCollections = data.map(
+      ({ address: id, image, title: text }) => ({
+        id,
+        image,
+        text,
+      })
+    );
+    setCollections(formatedCollections);
+  }
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function createNFT(data) {
+    if (!program) return;
+
+    console.log({ data });
+
+    setIsLoading(true);
+    const nftAddress = await program.mintAdditionalSupply(data).then(() => {
+      setIsLoading(false);
+    });
+    console.log(nftAddress);
+  }
+
+  useEffect(() => {
+    if (!publicKey) return;
+    getCollections();
+  }, [publicKey]);
 
   return (
     <div>
@@ -192,7 +240,7 @@ const Create = () => {
             <div className="relative">
               <div>
                 <label className="font-display text-jacarta-700 mb-2 block dark:text-white">
-                  Collection
+                  Category
                 </label>
                 <div className="mb-3 flex items-center space-x-2">
                   <p className="dark:text-jacarta-300 text-2xs">
@@ -223,13 +271,14 @@ const Create = () => {
                 </div>
               </div>
 
-              <input
-                {...register("collection")}
-                type="url"
-                id="item-external-link"
-                className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 px-3 hover:ring-2 dark:text-white"
-                placeholder="your collection address"
-              />
+              {/* dropdown */}
+              <div className="dropdown my-1 cursor-pointer">
+                <Collection_dropdown2
+                  data={collections}
+                  collection={true}
+                  handleChange={handleCategory}
+                />
+              </div>
             </div>
 
             {/* <!-- Properties --> */}
@@ -335,10 +384,11 @@ const Create = () => {
 
             {/* <!-- Submit --> */}
             <button
+              disabled={!publicKey || isLoading}
               type="Submit"
-              className="bg-accent-dark disabled:bg-accent-light rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+              className="bg-accent-dark disabled:bg-accent-lighter rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
             >
-              Create
+              {!isLoading ? "Create" : "Creating..."}
             </button>
           </div>
         </form>

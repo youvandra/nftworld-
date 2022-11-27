@@ -28,12 +28,7 @@ const CategoryItem = () => {
           creator,
           owner,
         } = item;
-        const itemLink = image
-          .split("/")
-          .slice(-1)
-          .toString()
-          .replace(".jpg", "")
-          .replace(".gif", "");
+        const itemLink = id;
         return (
           <article key={id}>
             <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
@@ -54,9 +49,9 @@ const CategoryItem = () => {
                   <div className="flex -space-x-2">
                     <Link href={`/item/${itemLink}`}>
                       <a>
-                        <Tippy content={<span>creator: {creator.name}</span>}>
+                        <Tippy content={<span>creator: {creator?.name}</span>}>
                           <img
-                            src={creator.image}
+                            src={creator?.image}
                             alt="creator"
                             className="dark:border-jacarta-600 hover:border-accent dark:hover:border-accent h-6 w-6 rounded-full border-2 border-white"
                           />
@@ -65,9 +60,9 @@ const CategoryItem = () => {
                     </Link>
                     <Link href={`/item/${itemLink}`}>
                       <a>
-                        <Tippy content={<span>creator: {owner.name}</span>}>
+                        <Tippy content={<span>creator: {owner?.name}</span>}>
                           <img
-                            src={owner.image}
+                            src={owner?.image}
                             alt="owner"
                             layout="fill"
                             className="dark:border-jacarta-600 hover:border-accent dark:hover:border-accent h-6 w-6 rounded-full border-2 border-white"

@@ -135,7 +135,7 @@ const Top_collection = () => {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-[1.875rem] lg:grid-cols-4">
             {data.map((item, id) => {
               const { image, title, icon, amount, address } = item;
-              const itemLink = `/${address}`;
+              const itemLink = address;
 
               return (
                 <div
