@@ -98,7 +98,7 @@ const Create = () => {
     console.log({ data });
 
     setIsLoading(true);
-    const nftAddress = await program.mintAdditionalSupply(data).then(() => {
+    const nftAddress = await program.mint(data).then(() => {
       setIsLoading(false);
     });
     console.log(nftAddress);
@@ -206,7 +206,7 @@ const Create = () => {
                 welcome to link to your own webpage with more details.
               </p>
               <input
-                {...register("externalLink")}
+                {...register("external_url")}
                 type="url"
                 id="item-external-link"
                 className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 px-3 hover:ring-2 dark:text-white"
