@@ -236,20 +236,20 @@ html {
 	}
 
 	/* Tooltips */
-	.tippy-box[data-theme~='xhibiter'] {
+	.tippy-box[data-theme~='NFTWORLD'] {
 		@apply bg-jacarta-700;
 	}
 
-	.tippy-box[data-theme~='xhibiter'][data-placement^='top'] > .tippy-arrow::before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='top'] > .tippy-arrow::before {
 		@apply border-t-jacarta-700;
 	}
-	.tippy-box[data-theme~='xhibiter'][data-placement^='bottom'] > .tippy-arrow::before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='bottom'] > .tippy-arrow::before {
 		@apply border-b-jacarta-700;
 	}
-	.tippy-box[data-theme~='xhibiter'][data-placement^='left'] > .tippy-arrow::before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='left'] > .tippy-arrow::before {
 		@apply border-l-jacarta-700;
 	}
-	.tippy-box[data-theme~='xhibiter'][data-placement^='right'] > .tippy-arrow::before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='right'] > .tippy-arrow::before {
 		@apply border-r-jacarta-700;
 	}
 
@@ -3638,27 +3638,27 @@ html {
 		border-radius: 1.25rem;
 	}
 
-	.tippy-box[data-theme~='xhibiter'] {
+	.tippy-box[data-theme~='NFTWORLD'] {
 		--tw-bg-opacity: 1;
 		background-color: rgba(19, 23, 64, var(--tw-bg-opacity));
 	}
 
-	.tippy-box[data-theme~='xhibiter'][data-placement^='top'] > .tippy-arrow:before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='top'] > .tippy-arrow:before {
 		--tw-border-opacity: 1;
 		border-top-color: rgba(19, 23, 64, var(--tw-border-opacity));
 	}
 
-	.tippy-box[data-theme~='xhibiter'][data-placement^='bottom'] > .tippy-arrow:before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='bottom'] > .tippy-arrow:before {
 		--tw-border-opacity: 1;
 		border-bottom-color: rgba(19, 23, 64, var(--tw-border-opacity));
 	}
 
-	.tippy-box[data-theme~='xhibiter'][data-placement^='left'] > .tippy-arrow:before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='left'] > .tippy-arrow:before {
 		--tw-border-opacity: 1;
 		border-left-color: rgba(19, 23, 64, var(--tw-border-opacity));
 	}
 
-	.tippy-box[data-theme~='xhibiter'][data-placement^='right'] > .tippy-arrow:before {
+	.tippy-box[data-theme~='NFTWORLD'][data-placement^='right'] > .tippy-arrow:before {
 		--tw-border-opacity: 1;
 		border-right-color: rgba(19, 23, 64, var(--tw-border-opacity));
 	}

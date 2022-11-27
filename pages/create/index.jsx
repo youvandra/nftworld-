@@ -353,7 +353,7 @@ const Create = () => {
                             Setting your asset as explicit and sensitive
                             content, like pornography and other not safe for
                             work (NSFW) content, will protect users with safe
-                            search while browsing Xhibiter
+                            search while browsing NFTWORLD
                           </span>
                         }
                       >

@@ -10,7 +10,7 @@ import Download from "../../components/blog/download";
 const Home_5 = () => {
   return (
     <>
-      <Meta title="Home 5 || Xhibiter | NFT Marketplace Next.js Template" />
+      <Meta title="Home 5 || NFTWORLD | NFT Marketplace Next.js Template" />
       <Hero_5 />
       <Process />
       <Feature_collections />
