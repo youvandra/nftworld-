@@ -534,7 +534,7 @@ const Recently_added_dropdown = ({ data, dropdownFor }) => {
 											alt="eth"
 											className="mr-2 h-5 w-5 rounded-full"
 										/>
-										ETH
+										SOL
 									</span>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"

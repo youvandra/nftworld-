@@ -1,9 +1,9 @@
 import axios from "axios";
 import FormData from "form-data";
-export const PINATA_KEY = "adcd2f6925a3ad5af235";
+export const PINATA_KEY = "b4b7f71a29cb1b7dfb49";
 
 export const PINATA_SECRET =
-  "01360437e92b8943c5f7483344d03be0194004554d79615aec26cdec5cb007b7";
+  "42dbf53d8db50c976433bbea3e4fbc15c6d7d82e85c84ef03f0b5a98cd95cdf5";
 
 export const uploadJSONToIPFS = async (JSONBody) => {
   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
