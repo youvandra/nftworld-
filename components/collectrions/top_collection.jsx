@@ -149,7 +149,7 @@ const Top_collection = () => {
                         <img
                           src={image}
                           alt={title}
-                          className="rounded-2lg"
+                          className="rounded-2lg aspect-square"
                           height={48}
                           width={48}
                           style={{ objectFit: "cover" }}

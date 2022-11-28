@@ -16,29 +16,31 @@ const Feature_collections_carousel = () => {
   async function getCollections() {
     const collections = await axios.get("/api/getCollections");
     if (collections.data) {
-      const formatedCollections = collections.data.map(
-        ({
-          title,
+      const formatedCollections = collections.data
+        .filter(({ tending }) => tending)
+        .map(
+          ({
+            title,
 
-          address: id,
-          creator: { name: userName, profilePhoto: userImage },
-          itemsCount,
-          bigImage,
-          subImage1,
-          subImage2,
-          subImage3,
-        }) => ({
-          title,
-          id,
-          itemsCount,
-          userName,
-          bigImage,
-          subImage1,
-          subImage2,
-          subImage3,
-          userImage,
-        })
-      );
+            address: id,
+            creator: { name: userName, profilePhoto: userImage },
+            itemsCount,
+            bigImage,
+            subImage1,
+            subImage2,
+            subImage3,
+          }) => ({
+            title,
+            id,
+            itemsCount,
+            userName,
+            bigImage,
+            subImage1,
+            subImage2,
+            subImage3,
+            userImage,
+          })
+        );
       setData(formatedCollections);
     }
   }

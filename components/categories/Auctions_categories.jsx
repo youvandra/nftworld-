@@ -27,7 +27,6 @@ const Auctions_categories = () => {
 
   useEffect(() => {
     getListings().then(async (listings) => {
-      console.log(listings[0]);
       const formatedLisings = await Promise.all(
         listings.map(
           async ({

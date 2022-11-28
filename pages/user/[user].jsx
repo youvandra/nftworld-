@@ -81,7 +81,7 @@ const User = () => {
               <img
                 src={image}
                 alt={title}
-                className="object-cover w-full h-full dark:border-jacarta-600 rounded-xl border-[5px] border-white"
+                className="object-cover aspect-square w-full h-full dark:border-jacarta-600 rounded-xl border-[5px] border-white"
               />
               <div
                 className="dark:border-jacarta-600 bg-green absolute -right-3 bottom-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"

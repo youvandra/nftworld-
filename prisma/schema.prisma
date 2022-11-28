@@ -18,8 +18,8 @@ model User {
   twitterHandle String? @unique
   instagramName String? @unique
   website String? @unique
-  profilePhoto String? @db.Text
-  coverPhoto String? @db.Text
+  profilePhoto String @db.Text @default("/images/user/user_avatar.gif")
+  coverPhoto String @db.Text @default("/images/user/banner.jpg")
   collections Collection[]
   featuredNFTs FeaturedNFT[]
 }
@@ -30,8 +30,8 @@ model Collection {
   image String
   banner String 
   description String @db.Text
-  creator User @relation(fields: [creatorAddress],references: [address])
-  creatorAddress String
+  creator User? @relation(fields: [creatorAddress],references: [address],onDelete: Cascade)
+  creatorAddress String?
   isVerified Boolean @default(false)
   floorPrice String @default("0")
   volumeTraded String @default("0")
@@ -46,7 +46,7 @@ model Collection {
 	subImage2 String?
 	subImage3 String?
 	postTime String
-	postDate String @default("l")//Last 24 Hours or Last 7 days or Last 30 days
+	postDate String @default("Last 24 Hours")//Last 24 Hours or Last 7 days or Last 30 days
 }
 
 model FeaturedNFT {

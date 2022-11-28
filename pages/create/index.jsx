@@ -31,13 +31,13 @@ const Create = () => {
     "OGG",
     "GLB",
     "GLTF",
+    "AVIF",
+    "WEBP",
   ];
   const [file, setFile] = useState(null);
   const [collections, setCollections] = useState(collectionDropdown2_data);
   const [collectionAddress, setCollectionAddress] = useState();
-  const { program } = useProgram(
-    "GXMXatNsQ39Lh4KUmheG8UjccskUQcvy5DVEpukhcSVb"
-  );
+  const { program } = useProgram(collectionAddress);
 
   const dispatch = useDispatch();
 
@@ -62,7 +62,7 @@ const Create = () => {
     },
   ];
 
-  const { handleSubmit, register, setValue } = useForm();
+  const { handleSubmit, register, setValue } = useForm({});
 
   const handleChange = (file) => {
     setFile(file);
@@ -157,8 +157,8 @@ const Create = () => {
                     <path d="M16 13l6.964 4.062-2.973.85 2.125 3.681-1.732 1-2.125-3.68-2.223 2.15L16 13zm-2-7h2v2h5a1 1 0 0 1 1 1v4h-2v-3H10v10h4v2H9a1 1 0 0 1-1-1v-5H6v-2h2V9a1 1 0 0 1 1-1h5V6zM4 14v2H2v-2h2zm0-4v2H2v-2h2zm0-4v2H2V6h2zm0-4v2H2V2h2zm4 0v2H6V2h2zm4 0v2h-2V2h2zm4 0v2h-2V2h2z" />
                   </svg>
                   <p className="dark:text-jacarta-300 mx-auto max-w-xs text-xs">
-                    JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max
-                    size: 100 MB
+                    JPG, PNG, GIF,AVIF, WEBP, SVG, MP4, WEBM, MP3, WAV, OGG,
+                    GLB, GLTF. Max size: 100 MB
                   </p>
                 </div>
                 <div className="dark:bg-jacarta-600 bg-jacarta-50 absolute inset-4 cursor-pointer rounded opacity-0 group-hover:opacity-100 ">
@@ -227,7 +227,7 @@ const Create = () => {
                 underneath its image. Markdown syntax is supported.
               </p>
               <textarea
-                {...register("description")}
+                {...register("description", { required: false })}
                 id="item-description"
                 className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 px-3 hover:ring-2 dark:text-white"
                 rows="4"
@@ -240,7 +240,7 @@ const Create = () => {
             <div className="relative">
               <div>
                 <label className="font-display text-jacarta-700 mb-2 block dark:text-white">
-                  Category
+                  Collection
                 </label>
                 <div className="mb-3 flex items-center space-x-2">
                   <p className="dark:text-jacarta-300 text-2xs">
