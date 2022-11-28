@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import Collection_dropdown2 from "../../components/dropdown/collection_dropdown2";
-import {
-  collectionDropdown2_data,
-  EthereumDropdown2_data,
-} from "../../data/dropdown";
+import { collectionDropdown2_data } from "../../data/dropdown";
 import { FileUploader } from "react-drag-drop-files";
 import Proparties_modal from "../../components/modal/proparties_modal";
 import { useDispatch } from "react-redux";
 import { showPropatiesModal } from "../../redux/counterSlice";
 import Meta from "../../components/Meta";
-import { useForm } from "react-hook-form";
-import { useNFTs } from "../../metaplex/useNFTs";
+import { set, useForm } from "react-hook-form";
 import axios from "axios";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect } from "react";
@@ -44,25 +40,25 @@ const Create = () => {
   const popupItemData = [
     {
       id: 1,
-      name: "proparties",
+      name: "properties",
       text: "Textual traits that show up as rectangles.",
       icon: "proparties-icon",
     },
-    {
-      id: 2,
-      name: "levels",
-      text: "Numerical traits that show as a progress bar.",
-      icon: "level-icon",
-    },
-    {
-      id: 3,
-      name: "stats",
-      text: "Numerical traits that just show as numbers.",
-      icon: "stats-icon",
-    },
+    // {
+    //   id: 2,
+    //   name: "levels",
+    //   text: "Numerical traits that show as a progress bar.",
+    //   icon: "level-icon",
+    // },
+    // {
+    //   id: 3,
+    //   name: "stats",
+    //   text: "Numerical traits that just show as numbers.",
+    //   icon: "stats-icon",
+    // },
   ];
 
-  const { handleSubmit, register, setValue } = useForm({});
+  const { handleSubmit, register, setValue } = useForm();
 
   const handleChange = (file) => {
     setFile(file);
@@ -71,6 +67,10 @@ const Create = () => {
 
   function handleCategory(col) {
     setCollectionAddress(col);
+  }
+
+  function handleProperties(p) {
+    setValue("properties", p);
   }
 
   const { publicKey } = useWallet();
@@ -94,7 +94,6 @@ const Create = () => {
 
   async function createNFT(data) {
     if (!program) return;
-
     console.log({ data });
 
     setIsLoading(true);
@@ -302,6 +301,7 @@ const Create = () => {
                       </div>
                     </div>
                     <button
+                      type="button"
                       className="group dark:bg-jacarta-700 hover:bg-accent border-accent flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border bg-white hover:border-transparent"
                       onClick={() => dispatch(showPropatiesModal())}
                     >
@@ -321,9 +321,7 @@ const Create = () => {
               );
             })}
 
-            <Proparties_modal />
-
-            {/* <!-- Properties --> */}
+            <Proparties_modal handleProperties={handleProperties} />
 
             {/* <!-- Explicit & Sensitive Content --> */}
             <div className="dark:border-jacarta-600 border-jacarta-100 relative mb-6 border-b py-6">
@@ -375,8 +373,8 @@ const Create = () => {
                 </div>
                 <input
                   type="checkbox"
-                  value="checkbox"
                   name="check"
+                  {...register("isNSFW")}
                   className="checked:bg-accent checked:focus:bg-accent checked:hover:bg-accent after:bg-jacarta-400 bg-jacarta-100 relative h-6 w-[2.625rem] cursor-pointer appearance-none rounded-full border-none after:absolute after:top-[0.1875rem] after:left-[0.1875rem] after:h-[1.125rem] after:w-[1.125rem] after:rounded-full after:transition-all checked:bg-none checked:after:left-[1.3125rem] checked:after:bg-white focus:ring-transparent focus:ring-offset-0"
                 />
               </div>
