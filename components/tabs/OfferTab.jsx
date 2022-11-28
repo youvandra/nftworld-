@@ -72,7 +72,7 @@ const OfferTab = () => {
 										</svg>
 									</span>
 									<span className="text-green text-sm font-medium tracking-tight">
-										{ethPrice} ETH
+										{ethPrice} SOL
 									</span>
 								</div>
 								<div
