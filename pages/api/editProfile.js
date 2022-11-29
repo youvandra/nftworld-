@@ -31,10 +31,12 @@ export default async function handler({ method, body }, res) {
       .then(() => {
         res.status(200).send();
       })
-      .catch(() => {
+      .catch((e) => {
+        console.error(e);
         res.status(500).send();
       });
-  } catch {
+  } catch (e) {
+    console.error(e);
     res.status(500).send();
   }
 }
