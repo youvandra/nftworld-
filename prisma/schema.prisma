@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   address String @id
-  name String @unique
+  name String
   bio String? @db.Text
   email String? @unique
   twitterHandle String? @unique
@@ -42,9 +42,9 @@ model Collection {
   tending Boolean @default(false)
   recent Boolean @default(true)
   bigImage String
-	subImage1 String?
-	subImage2 String?
-	subImage3 String?
+	subImage2 String @default("/placeholder.jpg")
+	subImage1 String @default("/placeholder.jpg")
+	subImage3 String @default("/placeholder.jpg")
 	postTime String
 	postDate String @default("Last 24 Hours")//Last 24 Hours or Last 7 days or Last 30 days
 }

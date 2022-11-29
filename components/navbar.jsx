@@ -359,7 +359,7 @@ const Navbar = () => {
               <div className="ml-auto flex lg:hidden">
                 {/* <!-- Profile --> */}
                 {home3 ? (
-                  <Link href="/profile/user_avatar">
+                  <Link href="/edit-profile">
                     <a
                       className="border-jacarta-100 focus:bg-accent group hover:bg-accent ml-2 flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent border-transparent bg-white/[.15]"
                       aria-label="profile"
@@ -377,7 +377,7 @@ const Navbar = () => {
                     </a>
                   </Link>
                 ) : (
-                  <Link href="/profile/user_avatar">
+                  <Link href="/edit-profile">
                     <a
                       className="border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent ml-2 flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15]"
                       aria-label="profile"

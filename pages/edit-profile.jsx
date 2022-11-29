@@ -38,7 +38,7 @@ const Edit_user = () => {
         ...data,
         address: currentDetails.address,
         profilePhoto: image,
-        coverePhoto: banner,
+        coverPhoto: banner,
       })
       .finally(() => {
         setIsLoading(false);
@@ -166,7 +166,7 @@ const Edit_user = () => {
                   <input
                     {...register("name")}
                     type="text"
-                    value={currentDetails?.name}
+                    defaultValue={currentDetails?.name}
                     id="profile-username"
                     className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 hover:ring-2 dark:text-white px-3"
                     placeholder="Enter username"
@@ -179,7 +179,7 @@ const Edit_user = () => {
                   </label>
                   <textarea
                     {...register("bio")}
-                    value={currentDetails?.bio}
+                    defaultValue={currentDetails?.bio}
                     id="profile-bio"
                     className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 hover:ring-2 dark:text-white px-3"
                     required
@@ -192,7 +192,7 @@ const Edit_user = () => {
                   </label>
                   <input
                     {...register("email")}
-                    value={currentDetails?.email}
+                    defaultValue={currentDetails?.email}
                     type="text"
                     id="profile-email"
                     className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 hover:ring-2 dark:text-white px-3"
@@ -219,7 +219,7 @@ const Edit_user = () => {
                     </svg>
                     <input
                       {...register("twitterHandle")}
-                      value={currentDetails?.twitterHandle}
+                      defaultValue={currentDetails?.twitterHandle}
                       type="text"
                       id="profile-twitter"
                       className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-t-lg py-3 pl-10 hover:ring-2 focus:ring-inset dark:text-white"
@@ -241,7 +241,7 @@ const Edit_user = () => {
                     </svg>
                     <input
                       {...register("instagramName")}
-                      value={currentDetails?.instagramName}
+                      defaultValue={currentDetails?.instagramName}
                       type="text"
                       id="profile-instagram"
                       className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 -mt-px w-full py-3 pl-10 hover:ring-2 focus:ring-inset dark:text-white"
@@ -261,7 +261,7 @@ const Edit_user = () => {
                     </svg>
                     <input
                       {...register("website")}
-                      value={currentDetails?.website}
+                      defaultValue={currentDetails?.website}
                       type="url"
                       id="profile-website"
                       className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 -mt-px w-full rounded-b-lg py-3 pl-10 hover:ring-2 focus:ring-inset dark:text-white"

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import Link from "next/link";
 import Social_dropdown from "../../components/dropdown/Social_dropdown";
 import Auctions_dropdown from "../../components/dropdown/Auctions_dropdown";
 import user_data from "../../data/user_data";
@@ -9,7 +7,6 @@ import User_items from "../../components/user/User_items";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import Head from "next/head";
 import Meta from "../../components/Meta";
 import axios from "axios";
 import { useNFTs } from "../../metaplex/useNFTs";
@@ -20,8 +17,6 @@ const User = () => {
   const [{ coverPhoto, icon, image, text, title, userId }, setUser] = useState(
     user_data[0]
   );
-
-  const { getNFTsByOwner } = useNFTs();
 
   const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -60,7 +55,6 @@ const User = () => {
   useEffect(() => {
     if (!address) return;
     getUser();
-    getNFTsByOwner(address);
   }, [address]);
 
   return (

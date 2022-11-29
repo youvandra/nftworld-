@@ -7,6 +7,7 @@ import Trending_categories_items from "../categories/trending_categories_items";
 
 import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const User_items = () => {
   const [itemActive, setItemActive] = useState(1);
@@ -37,6 +38,8 @@ const User_items = () => {
       icon: "activity",
     },
   ];
+
+  const { publicKey } = useWallet();
 
   return (
     <>
@@ -102,7 +105,7 @@ const User_items = () => {
             <TabPanel>
               {/* <!-- Grid --> */}
               <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-                <Explore_collection_item itemFor="userPage" />
+                <Explore_collection_item itemFor={publicKey?.toBase58()} />
               </div>
             </TabPanel>
             <TabPanel>

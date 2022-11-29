@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { items_data } from "../../data/items_data";
 import Auctions_dropdown from "../../components/dropdown/Auctions_dropdown";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import Items_Countdown_timer from "../../components/items_countdown_timer";
 import { ItemsTabs } from "../../components/component";
 import More_items from "./more_items";
 import Likes from "../../components/likes";
-import Meta from "../../components/Meta";
 import { useDispatch } from "react-redux";
 import { bidsModalShow } from "../../redux/counterSlice";
 import { useMetaplex } from "../../metaplex/useMetaplex";
 import { PublicKey } from "@metaplex-foundation/js";
 import { returnNFTwithMetadata } from "../../utils/returnNFTwithMetadata";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import axios from "axios";
+import { useProgram, useNFTs } from "@thirdweb-dev/react/solana";
 
 const Item = () => {
   const dispatch = useDispatch();
@@ -23,7 +22,7 @@ const Item = () => {
   const address = router.query.item;
   const { metaplex } = useMetaplex();
   const { getAuctionHouse } = useAuctionHouse();
-
+  const [creator, setCreator] = useState();
   const [imageModal, setImageModal] = useState(false);
   const [nft, setNFT] = useState(null);
   const [nftListing, setNFTListing] = useState(null);
@@ -44,15 +43,51 @@ const Item = () => {
     if (listing) setNFTListing(listing);
   }
 
+  async function getCreator() {
+    axios
+      .get(
+        `/api/getUserByAddress?address=${nft?.creators[0]?.address?.toBase58()}`
+      )
+      .then(({ data }) => {
+        console.log({ creator: data });
+        setCreator(data);
+      });
+  }
+
   useEffect(() => {
     if (!nft) return;
     getListing();
+    getCreator();
   }, [nft]);
 
   useEffect(() => {
     if (!address) return;
     getNFT();
   }, [address]);
+
+  const [collection, setCollection] = useState();
+  const [collectionNFTs, setCollectionNFTs] = useState();
+
+  const { program } = useProgram(collection?.address);
+  const { data: metadata } = useNFTs(program);
+
+  useEffect(() => {
+    if (!metadata) return;
+    setCollectionNFTs(metadata);
+  }, [metadata]);
+
+  async function getCollection(address) {
+    axios
+      .get(`/api/getCollectionByAddress?address=${address}`)
+      .then(({ data }) => {
+        setCollection(data);
+      });
+  }
+
+  useEffect(() => {
+    console.log(nft);
+    if (nft) getCollection(nft.collection.address.toBase58());
+  }, [nft]);
 
   return (
     <>
@@ -120,9 +155,9 @@ const Item = () => {
                 <div className="mb-3 flex">
                   {/* <!-- Collection --> */}
                   <div className="flex items-center">
-                    <Link href="#">
+                    <Link href={`/collection/${collection?.address}`}>
                       <a className="text-accent mr-2 text-sm font-bold">
-                        CryptoGuysNFT
+                        {collection?.title}
                       </a>
                     </Link>
                     <span
@@ -153,27 +188,6 @@ const Item = () => {
                   {nft.name}
                 </h1>
 
-                <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <Tippy content={<span>SOL</span>}>
-                      <span className="-ml-1">
-                        <svg className="icon mr-1 h-4 w-4">
-                          <use xlinkHref="/icons.svg#icon-ETH"></use>
-                        </svg>
-                      </span>
-                    </Tippy>
-                    <span className="text-green text-sm font-medium tracking-tight">
-                      60.2 SOL
-                    </span>
-                  </div>
-                  <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
-                    Highest bid
-                  </span>
-                  <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
-                    1/1 available
-                  </span>
-                </div>
-
                 <p className="dark:text-jacarta-300 mb-10">
                   {nft.metadata.description}
                 </p>
@@ -182,10 +196,10 @@ const Item = () => {
                 <div className="mb-8 flex flex-wrap">
                   <div className="mr-8 mb-4 flex">
                     <figure className="mr-4 shrink-0">
-                      <Link href="/user/avatar_6">
+                      <Link href={`/user/${creator?.address}`}>
                         <a className="relative block">
                           <img
-                            src={"creator"}
+                            src={creator?.profilePhoto}
                             alt={"creator"}
                             className="rounded-2lg h-12 w-12"
                             loading="lazy"
@@ -205,48 +219,14 @@ const Item = () => {
                     </figure>
                     <div className="flex flex-col justify-center">
                       <span className="text-jacarta-400 block text-sm dark:text-white">
-                        Creator <strong>10% royalties</strong>
+                        {creator?.name + " "}
+                        <strong>
+                          {nft.sellerFeeBasisPoints * 100}% royalties
+                        </strong>
                       </span>
-                      <Link href="/user/avatar_6">
+                      <Link href={`/user/${creator?.address}`}>
                         <a className="text-accent block">
                           <span className="text-sm font-bold">creator</span>
-                        </a>
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="mb-4 flex">
-                    <figure className="mr-4 shrink-0">
-                      <Link href="/user/avatar_6">
-                        <a className="relative block">
-                          <img
-                            src={"ownerImage"}
-                            alt={"ownerName"}
-                            className="rounded-2lg h-12 w-12"
-                            loading="lazy"
-                          />
-                          <div
-                            className="dark:border-jacarta-600 bg-green absolute -right-3 top-[60%] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
-                            data-tippy-content="Verified Collection"
-                          >
-                            <Tippy content={<span>Verified Collection</span>}>
-                              <svg className="icon h-[.875rem] w-[.875rem] fill-white">
-                                <use xlinkHref="/icons.svg#icon-right-sign"></use>
-                              </svg>
-                            </Tippy>
-                          </div>
-                        </a>
-                      </Link>
-                    </figure>
-                    <div className="flex flex-col justify-center">
-                      <span className="text-jacarta-400 block text-sm dark:text-white">
-                        Owned by
-                      </span>
-                      <Link href="/user/avatar_6">
-                        <a className="text-accent block">
-                          <span className="text-sm font-bold">
-                            {"ownerName"}
-                          </span>
                         </a>
                       </Link>
                     </div>

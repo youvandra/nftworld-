@@ -270,7 +270,7 @@ const MblNavbar = ({ theme }) => {
     {
       id: 18,
       text: "Edit Profile",
-      href: "/profile/user_avatar",
+      href: "/edit-profile",
       New: false,
     },
     {

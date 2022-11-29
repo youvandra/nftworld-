@@ -13,6 +13,7 @@ import axios from "axios";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect } from "react";
 import { useProgram } from "@thirdweb-dev/react/solana";
+import { useRouter } from "next/router";
 
 const Create = () => {
   const fileTypes = [
@@ -91,16 +92,21 @@ const Create = () => {
     setCollections(formatedCollections);
   }
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   async function createNFT(data) {
     if (!program) return;
     console.log({ data });
 
     setIsLoading(true);
-    const nftAddress = await program.mint(data).then(() => {
-      setIsLoading(false);
-    });
-    console.log(nftAddress);
+    await program
+      .mint({ ...data, sellerFeeBasisPoints: 300 })
+      .finally(() => {
+        setIsLoading(false);
+      })
+      .then((nftAddress) => {
+        router.push(`/item/${nftAddress}`);
+      });
   }
 
   useEffect(() => {
@@ -113,7 +119,7 @@ const Create = () => {
       <Meta title="NFT World - Create" />
       {/* <!-- Create --> */}
       <section className="relative py-24">
-        <picture className="pointer-events-none absolute inset-0 -z-10 dark:hidden">
+        <picture className=" pointer-events-none absolute inset-0 -z-10 dark:hidden">
           <img
             src="/images/gradient_light.jpg"
             alt="gradient"

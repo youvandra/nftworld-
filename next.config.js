@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
-  images: { domains: ["gateway.pinata.cloud"] },
+  images: { domains: ["gateway.pinata.cloud", "gateway.ipfscdn.io"] },
 };
 
 module.exports = nextConfig;

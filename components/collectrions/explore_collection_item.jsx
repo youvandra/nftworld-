@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Feature_collections_data from "../../data/Feature_collections_data";
 import axios from "axios";
+import { useNFTs } from "../../metaplex/useNFTs";
 
 const Explore_collection_item = ({ itemFor }) => {
   const { sortedCollectionData } = useSelector((state) => state.counter);
 
   const [itemData, setItemData] = useState([]);
   const [data, setData] = useState(Feature_collections_data);
+  const { getCollectionsByOwner } = useNFTs();
+  const [userCollections, setUserCollections] = useState([]);
 
   async function getCollections() {
     const collections = await axios.get("/api/getCollections");
@@ -18,7 +21,7 @@ const Explore_collection_item = ({ itemFor }) => {
           title,
 
           address: id,
-          creator: { name: userName, profilePhoto: userImage },
+          creator: { name: userName, profilePhoto: userImage, address },
           itemsCount,
           bigImage,
           subImage1,
@@ -34,10 +37,19 @@ const Explore_collection_item = ({ itemFor }) => {
           subImage2,
           subImage3,
           userImage,
+          address,
         })
       );
       setData(formatedCollections);
     }
+  }
+
+  async function getUserCollections() {
+    const rawCollections = await getCollectionsByOwner(itemFor);
+    const addresses = rawCollections.map(({ mintAddress }) =>
+      mintAddress.toBase58()
+    );
+    setUserCollections(addresses);
   }
 
   useEffect(() => {
@@ -45,12 +57,20 @@ const Explore_collection_item = ({ itemFor }) => {
   }, []);
 
   useEffect(() => {
-    if (itemFor === "userPage") {
-      setItemData(Feature_collections_data.slice(0, 4));
+    if (!itemFor) return;
+    getUserCollections();
+  }, [itemFor]);
+
+  useEffect(() => {
+    if (itemFor) {
+      const filteredData = data.filter(({ id }) =>
+        userCollections.includes(id)
+      );
+      setItemData(filteredData);
     } else {
       setItemData(data);
     }
-  }, [sortedCollectionData, itemFor, data]);
+  }, [sortedCollectionData, itemFor, data, userCollections]);
 
   return (
     <>
@@ -65,17 +85,18 @@ const Explore_collection_item = ({ itemFor }) => {
           title,
           itemsCount,
           userName,
+          address,
         } = item;
         return (
           <article key={id}>
-            <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2xl border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
+            <div className="dark:bg-jacarta-700 flex flex-col h-full dark:border-jacarta-700 border-jacarta-100 rounded-2xl border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
               <Link href={`/collection/${id}`}>
-                <a className="flex space-x-[0.625rem]">
+                <a className="flex flex-grow space-x-[0.625rem]">
                   <span className="w-[74.5%]">
                     <img
                       src={bigImage}
                       alt="item 1"
-                      className="h-full w-full rounded-[0.625rem] object-cover"
+                      className="h-full min-h-[182px] w-full rounded-[0.625rem] object-cover"
                       loading="lazy"
                     />
                   </span>
@@ -110,7 +131,7 @@ const Explore_collection_item = ({ itemFor }) => {
 
               <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
                 <div className="flex flex-wrap items-center">
-                  <Link href="/user/avatar_6">
+                  <Link href={`/user/${address}`}>
                     <a className="mr-2 shrink-0">
                       <img
                         src={userImage}
@@ -120,7 +141,7 @@ const Explore_collection_item = ({ itemFor }) => {
                     </a>
                   </Link>
                   <span className="dark:text-jacarta-400 mr-1">by</span>
-                  <Link href="/user/avatar_6">
+                  <Link href={`/user/${address}`}>
                     <a className="text-accent">
                       <span>{userName}</span>
                     </a>

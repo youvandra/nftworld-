@@ -11,14 +11,20 @@ export function useNFTs() {
   async function getNFTsByOwner(address) {
     const owner = new PublicKey(address);
     const rawNFTs = await metaplex.nfts().findAllByOwner({ owner });
-    const formatedNFTs = await returnNFTsWithMetadata(rawNFTs);
+    const filtredNFTs = rawNFTs.filter(
+      ({ collection, collectionDetails }) => collection && !collectionDetails
+    );
+    const formatedNFTs = await returnNFTsWithMetadata(filtredNFTs);
     return formatedNFTs;
   }
 
   async function getNFTsByCreator(address) {
     const creator = new PublicKey(address);
     const rawNFTs = await metaplex.nfts().findAllByCreator({ creator });
-    const formatedNFTs = await returnNFTsWithMetadata(rawNFTs);
+    const filtredNFTs = rawNFTs.filter(
+      ({ collection, collectionDetails }) => collection && !collectionDetails
+    );
+    const formatedNFTs = await returnNFTsWithMetadata(filtredNFTs);
     return formatedNFTs;
   }
 
@@ -27,15 +33,23 @@ export function useNFTs() {
 
     const { pinataURL: uri } = await uploadJSONToIPFS({ ...data, image });
 
-    return await metaplex
-      .nfts()
-      .create({
-        name: data.name,
-        uri,
-        sellerFeeBasisPoints: 3,
-        collection: data.collection === "" ? undefined : data.collection,
-      });
+    return await metaplex.nfts().create({
+      name: data.name,
+      uri,
+      sellerFeeBasisPoints: 3,
+      collection: data.collection === "" ? undefined : data.collection,
+    });
   }
 
-  return { getNFTsByOwner, getNFTsByCreator, createNFT };
+  async function getCollectionsByOwner(address) {
+    const owner = new PublicKey(address);
+    const rawNFTs = await metaplex.nfts().findAllByOwner({ owner });
+    const filtredNFTs = rawNFTs.filter(
+      ({ collection, collectionDetails }) => collectionDetails
+    );
+    const formatedNFTs = await returnNFTsWithMetadata(filtredNFTs);
+    return formatedNFTs;
+  }
+
+  return { getNFTsByOwner, getNFTsByCreator, createNFT, getCollectionsByOwner };
 }

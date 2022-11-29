@@ -17,7 +17,7 @@ const Proparties_modal = ({ handleProperties }) => {
       _p.push(data);
       return _p;
     });
-    setValue("type", "");
+    setValue("value", "");
     setValue("name", "");
   };
 
@@ -60,7 +60,7 @@ const Proparties_modal = ({ handleProperties }) => {
                 sidebar.
               </p>
 
-              {properties.map(({ type, name }, i) => (
+              {properties.map(({ name, value }, i) => (
                 <div key={i} className="relative my-3 flex items-center">
                   <button
                     onClick={() => {
@@ -89,7 +89,7 @@ const Proparties_modal = ({ handleProperties }) => {
                     <input
                       disabled
                       type="text"
-                      value={type}
+                      value={name}
                       className="dark:bg-jacarta-700 px-4 dark:border-jacarta-600 focus:ring-accent border-jacarta-100 dark:placeholder-jacarta-300 h-12 w-full border border-r-0 focus:ring-inset dark:text-white"
                     />
                   </div>
@@ -98,7 +98,7 @@ const Proparties_modal = ({ handleProperties }) => {
                     <input
                       disabled
                       type="text"
-                      value={name}
+                      value={value}
                       className="dark:bg-jacarta-700 px-4 dark:border-jacarta-600 focus:ring-accent border-jacarta-100 dark:placeholder-jacarta-300 h-12 w-full rounded-r-lg border focus:ring-inset dark:text-white"
                     />
                   </div>

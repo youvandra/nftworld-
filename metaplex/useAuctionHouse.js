@@ -1,4 +1,4 @@
-import { PublicKey } from "@metaplex-foundation/js";
+import { PublicKey, sol } from "@metaplex-foundation/js";
 import { useMetaplex } from "./useMetaplex";
 import { AUCTION_HOUSE_ADDRESS } from "../utils/consts";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
@@ -80,5 +80,14 @@ export function useAuctionHouse() {
     metaplex.auctionHouse().sell({ auctionHouse, bid });
   }
 
-  return { getAuctionHouse, getListings, getBids, sellBid, cancelBid };
+  async function list(address, price) {
+    const mintAccount = new PublicKey(address);
+    const auctionHouse = await getAuctionHouse();
+
+    metaplex
+      .auctionHouse()
+      .list({ auctionHouse, mintAccount, price: sol(price) });
+  }
+
+  return { getAuctionHouse, getListings, getBids, sellBid, cancelBid, list };
 }
