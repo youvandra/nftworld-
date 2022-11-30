@@ -24,32 +24,34 @@ export default function CreateCollection() {
     image,
     banner,
     category,
+    sellerFeeBasisPoints,
   }) {
     if (!publicKey) return;
     setIsLoading(true);
-    await sdk.deployer
-      .createNftCollection({
-        name,
-        description,
-        image,
-      })
-      .then(async (address) => {
+    const collectionAddress = await sdk.deployer.createNftCollection({
+      name,
+      description,
+      image,
+    });
+
+    (await sdk.getNFTCollection(collectionAddress))
+      .updateRoyalty(Number(sellerFeeBasisPoints) * 100)
+      .then(async () => {
         const { pinataURL: imageFile } = await uploadFileToIPFS(image);
         const { pinataURL: bannerFile } = await uploadFileToIPFS(banner);
         const data = {
           creatorAddress: publicKey.toBase58(),
-          address,
+          address: collectionAddress,
           title: name,
           description,
           banner: bannerFile,
           image: imageFile,
           category,
         };
-
         axios
           .post("/api/addCollection", data)
           .then(() => {
-            router.push(`/collection/${address}`);
+            router.push(`/collection/${collectionAddress}`);
           })
           .finally(() => {
             setIsLoading(false);
@@ -244,33 +246,6 @@ export default function CreateCollection() {
                 <label className="font-display text-jacarta-700 mb-2 block dark:text-white">
                   Category
                 </label>
-                <div className="mb-3 flex items-center space-x-2">
-                  <p className="dark:text-jacarta-300 text-2xs">
-                    This is the collection where your item will appear.
-                    <Tippy
-                      theme="tomato-theme"
-                      content={
-                        <span>
-                          Moving items to a different collection may take up to
-                          30 minutes.
-                        </span>
-                      }
-                    >
-                      <span className="inline-block">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                          className="dark:fill-jacarta-300 fill-jacarta-500 ml-1 -mb-[3px] h-4 w-4"
-                        >
-                          <path fill="none" d="M0 0h24v24H0z"></path>
-                          <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"></path>
-                        </svg>
-                      </span>
-                    </Tippy>
-                  </p>
-                </div>
               </div>
 
               {/* dropdown */}
@@ -281,6 +256,23 @@ export default function CreateCollection() {
                   handleChange={handleCategory}
                 />
               </div>
+            </div>
+            {/* fee  */}
+            <div className="my-6">
+              <label
+                htmlFor="item-fee"
+                className="font-display text-jacarta-700 mb-2 block dark:text-white"
+              >
+                Royalty fee<span className="text-red">*</span>
+              </label>
+              <input
+                {...register("sellerFeeBasisPoints")}
+                type="text"
+                id="item-fee"
+                className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 px-3 hover:ring-2 dark:text-white"
+                placeholder="Royalty fee"
+                required
+              />
             </div>
 
             {/* <!-- Submit --> */}

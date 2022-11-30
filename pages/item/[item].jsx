@@ -226,7 +226,7 @@ const Item = () => {
                       <span className="text-jacarta-400 block text-sm dark:text-white">
                         {creator?.name + " "}
                         <strong>
-                          {nft.sellerFeeBasisPoints * 100}% royalties
+                          {nft.sellerFeeBasisPoints / 100}% royalties
                         </strong>
                       </span>
                       <Link href={`/user/${creator?.address}`}>
