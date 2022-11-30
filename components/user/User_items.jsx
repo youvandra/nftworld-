@@ -138,7 +138,7 @@ const User_items = ({ address }) => {
             <TabPanel>
               {/* <!-- Grid --> */}
               <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-                <Explore_collection_item itemFor={publicKey?.toBase58()} />
+                <Explore_collection_item itemFor={address} />
               </div>
             </TabPanel>
             <TabPanel>
