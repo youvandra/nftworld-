@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import UserContext from "../components/UserContext";
 import Home_4 from "./home/home_4";
 
@@ -18,6 +19,7 @@ export default function Home() {
 
   return (
     <div>
+      <Toaster />
       <Home_4 />
     </div>
   );
