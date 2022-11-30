@@ -100,7 +100,7 @@ const Create = () => {
 
     setIsLoading(true);
     await program
-      .mint({ ...data, sellerFeeBasisPoints: 300 })
+      .mint(data)
       .finally(() => {
         setIsLoading(false);
       })

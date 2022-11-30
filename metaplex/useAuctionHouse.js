@@ -21,21 +21,13 @@ export function useAuctionHouse() {
       .auctionHouse()
       .findListings({ auctionHouse, ...args });
 
-    const formatedRawListings = rawListings.map(
-      ({ sellerAddress, price, metadataAddress }) => ({
-        price: price.basisPoints.toNumber() / LAMPORTS_PER_SOL,
-        sellerAddress,
-        metadataAddress,
-      })
-    );
-
     const listing = await Promise.all(
-      formatedRawListings.map(async ({ metadataAddress, ...data }) => {
+      rawListings.map(async ({ metadataAddress, ...l }) => {
         const rawNFTS = await metaplex
           .nfts()
           .findByMetadata({ metadata: metadataAddress });
         const nfts = await returnNFTwithMetadata(rawNFTS);
-        return { ...nfts, ...data };
+        return { ...nfts, listing: l };
       })
     );
 

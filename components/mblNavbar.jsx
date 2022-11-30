@@ -442,6 +442,54 @@ const MblNavbar = ({ theme }) => {
                   </i>
                 </button>
               </li>
+              <li className="group">
+                <Link href="/create">
+                  <a
+                    onClick={() => {
+                      dispatch(closeMblMenu());
+                      localStorage.setItem("navItemValue", 33);
+                    }}
+                  >
+                    <button
+                      className={
+                        router.asPath === "/home/home_3"
+                          ? "font-display hover:text-accent focus:text-accent flex items-center justify-between py-3.5 text-base lg:text-white text-jacarta-700 dark:text-white lg:px-5"
+                          : "text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5"
+                      }
+                    >
+                      <span
+                        className={navText === "create" ? "text-accent" : ""}
+                      >
+                        Add NFT
+                      </span>
+                    </button>
+                  </a>
+                </Link>
+              </li>
+              <li className="group">
+                <Link href="/add-collection">
+                  <a
+                    onClick={() => {
+                      dispatch(closeMblMenu());
+                      localStorage.setItem("navItemValue", 33);
+                    }}
+                  >
+                    <button
+                      className={
+                        router.asPath === "/home/home_3"
+                          ? "font-display hover:text-accent focus:text-accent flex items-center justify-between py-3.5 text-base lg:text-white text-jacarta-700 dark:text-white lg:px-5"
+                          : "text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5"
+                      }
+                    >
+                      <span
+                        className={navText === "create" ? "text-accent" : ""}
+                      >
+                        Add Collection
+                      </span>
+                    </button>
+                  </a>
+                </Link>
+              </li>
 
               <li className="js-nav-dropdown nav-item dropdown group relative">
                 <button
@@ -806,30 +854,6 @@ const MblNavbar = ({ theme }) => {
                     );
                   })}
                 </ul>
-              </li>
-              <li className="group">
-                <Link href="/create">
-                  <a
-                    onClick={() => {
-                      dispatch(closeMblMenu());
-                      localStorage.setItem("navItemValue", 33);
-                    }}
-                  >
-                    <button
-                      className={
-                        router.asPath === "/home/home_3"
-                          ? "font-display hover:text-accent focus:text-accent flex items-center justify-between py-3.5 text-base lg:text-white text-jacarta-700 dark:text-white lg:px-5"
-                          : "text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5"
-                      }
-                    >
-                      <span
-                        className={navText === "create" ? "text-accent" : ""}
-                      >
-                        Create
-                      </span>
-                    </button>
-                  </a>
-                </Link>
               </li>
             </ul>
           </Link>

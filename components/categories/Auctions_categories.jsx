@@ -2,30 +2,31 @@ import React, { useEffect, useState } from "react";
 import HeadLine from "../headLine";
 import Auctions_category_data from "../../data/auctions_category_data";
 import Tippy from "@tippyjs/react";
-import Countdown_timer from "../Countdown_timer";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
 import Link from "next/link";
 import { bidsModalShow } from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";
 import "tippy.js/themes/light.css";
 import Image from "next/image";
-import auctions_category_data from "../../data/auctions_category_data";
-import Likes from "../likes";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import axios from "axios";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 const Auctions_categories = () => {
   const dispatch = useDispatch();
-  const [data, setData] = useState(Auctions_category_data.slice(0, 8));
+  const [data, setData] = useState(Auctions_category_data.slice(0, 4));
+  const [shortData, setShortData] = useState(
+    Auctions_category_data.slice(0, 4)
+  );
   const [loadMoreBtn, setLoadMoreBtn] = useState(true);
   const { getListings } = useAuctionHouse();
 
   const handleloadMore = () => {
-    setData(auctions_category_data);
+    setShortData(data);
     setLoadMoreBtn(false);
   };
 
-  useEffect(() => {
+  const getNFTListings = async () => {
     getListings().then(async (listings) => {
       const formatedLisings = await Promise.all(
         listings.map(
@@ -33,7 +34,7 @@ const Auctions_categories = () => {
             address,
             metadata: { image: bigImage },
             name: title,
-            price,
+            listing: { price },
             creators,
           }) => {
             const { data: user } = await axios.get(
@@ -52,7 +53,12 @@ const Auctions_categories = () => {
         )
       );
       setData(formatedLisings);
+      setShortData(formatedLisings.slice(0, 4));
     });
+  };
+
+  useEffect(() => {
+    getNFTListings();
   }, []);
 
   return (
@@ -65,7 +71,7 @@ const Auctions_categories = () => {
             classes="font-display text-jacarta-700 mb-8 text-center text-3xl dark:text-white"
           />
           <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-            {data.map((item) => {
+            {shortData.map((item, i) => {
               const {
                 id,
                 bigImage,
@@ -77,7 +83,7 @@ const Auctions_categories = () => {
               } = item;
               const itemLink = `/item/${id}`;
               return (
-                <article key={id}>
+                <article key={i}>
                   <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
                     <div className="mb-4 flex items-center justify-between relative">
                       <div className="flex -space-x-2 ">
@@ -85,7 +91,7 @@ const Auctions_categories = () => {
                           theme="tomato"
                           content={
                             <span className="py-1 px-2 block">
-                              Creator: {"Sussygirl"}
+                              Creator: {creatorName ?? "Sussygirl"}
                             </span>
                           }
                         >
@@ -148,7 +154,9 @@ const Auctions_categories = () => {
                     <div className="mt-2 text-sm">
                       <span className="dark:text-jacarta-300">Price</span>
                       <span className="dark:text-jacarta-100 text-jacarta-700">
-                        {" " + price + " SOL"}
+                        {" " +
+                          price?.basisPoints?.toNumber() / LAMPORTS_PER_SOL ??
+                          1 + " SOL"}
                       </span>
                     </div>
 

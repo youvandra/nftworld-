@@ -9,7 +9,6 @@ import "tippy.js/dist/tippy.css"; // optional
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Meta from "../../components/Meta";
 import axios from "axios";
-import { useNFTs } from "../../metaplex/useNFTs";
 
 const User = () => {
   const router = useRouter();
@@ -153,7 +152,7 @@ const User = () => {
           </div>
         </section>
         {/* <!-- end profile --> */}
-        <User_items />
+        <User_items address={address} />
       </div>
     </>
   );

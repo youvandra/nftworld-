@@ -21,7 +21,10 @@ export default function List() {
   }, [publicKey]);
 
   return (
-    <div className="pt-[5.5rem] lg:pt-24">
+    <div className="pt-[5.5rem] lg:pt-24 container">
+      <h1 className="mt-8 mb-12 text-center text-5xl font-bold">
+        List your NFT
+      </h1>
       <UserItem nfts={nfts} />
     </div>
   );
