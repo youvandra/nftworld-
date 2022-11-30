@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
-import Feature_collections_data from "../../data/Feature_collections_data";
 import Trending_categories_items from "../categories/trending_categories_items";
-
+import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
 import { useWallet } from "@solana/wallet-adapter-react";
+import auctions_category_data from "../../data/auctions_category_data";
+import ListingItem from "../categories/listingItem";
+import { PublicKey } from "@metaplex-foundation/js";
 
-const User_items = () => {
+const User_items = ({ address }) => {
   const [itemActive, setItemActive] = useState(1);
   const tabItem = [
     {
@@ -40,6 +42,20 @@ const User_items = () => {
   ];
 
   const { publicKey } = useWallet();
+
+  const { getListings } = useAuctionHouse();
+  const [userListings, setUserListings] = useState([]);
+
+  async function getUserListings() {
+    if (!publicKey) return;
+    const listing = await getListings({ seller: new PublicKey(address) });
+    console.log(listing);
+    setUserListings(listing);
+  }
+
+  useEffect(() => {
+    getUserListings();
+  }, [publicKey]);
 
   return (
     <>
@@ -87,7 +103,24 @@ const User_items = () => {
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items type="onSale" />
+                <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
+                  {userListings.map(
+                    ({
+                      creators,
+                      metadata: { image, name },
+                      listing,
+                      address,
+                    }) => (
+                      <ListingItem
+                        creatorAddress={creators[0]?.address?.toBase58()}
+                        listing={listing}
+                        image={image}
+                        name={name}
+                        address={address?.toBase58()}
+                      />
+                    )
+                  )}
+                </div>
               </div>
             </TabPanel>
             <TabPanel>
@@ -105,7 +138,7 @@ const User_items = () => {
             <TabPanel>
               {/* <!-- Grid --> */}
               <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-                <Explore_collection_item itemFor={publicKey?.toBase58()} />
+                <Explore_collection_item itemFor={address} />
               </div>
             </TabPanel>
             <TabPanel>

@@ -10,6 +10,7 @@ import Head from "next/head";
 import Meta from "../../components/Meta";
 import { useProgram, useNFTs } from "@thirdweb-dev/react/solana";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Collection = () => {
   const [likesImage, setLikesImage] = useState(false);
@@ -20,9 +21,9 @@ const Collection = () => {
     setCollection,
   ] = useState(collection_item_data[0]);
 
-  const { program } = useProgram(address);
-
-  const { data: nfts, isLoading } = useNFTs(program);
+  const { sortedtrendingCategoryItemData } = useSelector(
+    (state) => state.counter
+  );
 
   async function getCollection() {
     const { data } = await axios.get(
