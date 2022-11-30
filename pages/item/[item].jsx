@@ -15,6 +15,7 @@ import { returnNFTwithMetadata } from "../../utils/returnNFTwithMetadata";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import axios from "axios";
 import { useProgram, useNFTs } from "@thirdweb-dev/react/solana";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 const Item = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const Item = () => {
   const [creator, setCreator] = useState();
   const [imageModal, setImageModal] = useState(false);
   const [nft, setNFT] = useState(null);
-  const [nftListing, setNFTListing] = useState(null);
+  const [nftListing, setNFTListing] = useState();
 
   async function getNFT() {
     const rawNFT = await metaplex
@@ -37,10 +38,16 @@ const Item = () => {
 
   async function getListing() {
     const auctionHouse = await getAuctionHouse();
-    const [listing] = await metaplex
+    const listing = await metaplex
       .auctionHouse()
       .findListings({ auctionHouse, metadata: nft.metadataAddress });
-    if (listing) setNFTListing(listing);
+    if (!listing && listing.length === 0) return;
+    const prices = listing.map(
+      ({ price }) => price.basisPoints.toNumber() / LAMPORTS_PER_SOL
+    );
+    const price = Math.max(...prices);
+    const index = prices.indexOf(price);
+    setNFTListing(listing[index]);
   }
 
   async function getCreator() {
@@ -49,7 +56,6 @@ const Item = () => {
         `/api/getUserByAddress?address=${nft?.creators[0]?.address?.toBase58()}`
       )
       .then(({ data }) => {
-        console.log({ creator: data });
         setCreator(data);
       });
   }
@@ -85,8 +91,7 @@ const Item = () => {
   }
 
   useEffect(() => {
-    console.log(nft);
-    if (nft) getCollection(nft.collection.address.toBase58());
+    if (nft && nft.collection) getCollection(nft.collection.address.toBase58());
   }, [nft]);
 
   return (
@@ -221,7 +226,7 @@ const Item = () => {
                       <span className="text-jacarta-400 block text-sm dark:text-white">
                         {creator?.name + " "}
                         <strong>
-                          {nft.sellerFeeBasisPoints * 100}% royalties
+                          {nft.sellerFeeBasisPoints / 100}% royalties
                         </strong>
                       </span>
                       <Link href={`/user/${creator?.address}`}>
@@ -234,77 +239,32 @@ const Item = () => {
                 </div>
 
                 {/* <!-- Bid --> */}
-                <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-2lg border bg-white p-8">
-                  <div className="mb-8 sm:flex sm:flex-wrap">
-                    {/* <!-- Highest bid --> */}
-                    <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
-                      <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
-                        <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
-                          Highest bid by{" "}
-                        </span>
-                        <Link href="/user/avatar_6">
-                          <a className="text-accent text-sm font-bold">
-                            0x695d2ef170ce69e794707eeef9497af2de25df82
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="mt-3 flex">
-                        <figure className="mr-4 shrink-0">
-                          <Link href="#">
-                            <a className="relative block">
-                              <img
-                                src="/images/avatars/avatar_4.jpg"
-                                alt="avatar"
-                                className="rounded-2lg h-12 w-12"
-                                loading="lazy"
-                              />
-                            </a>
-                          </Link>
-                        </figure>
-                        <div>
-                          <div className="flex items-center whitespace-nowrap">
-                            <Tippy content={<span>ETH</span>}>
-                              <span className="-ml-1">
-                                <svg className="icon mr-1 h-4 w-4">
-                                  <use xlinkHref="/icons.svg#icon-ETH"></use>
-                                </svg>
-                              </span>
-                            </Tippy>
-                            <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                              {"price"} ETH
-                            </span>
-                          </div>
-                          <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
-                            ~10,864.10
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <!-- Countdown --> */}
-                  </div>
-
-                  <Link href="#">
-                    <button
-                      className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                      onClick={() => dispatch(bidsModalShow())}
-                    >
-                      Purchase
-                    </button>
-                  </Link>
-                </div>
+                {
+                  <button
+                    disabled={!nftListing}
+                    className="bg-accent disabled:bg-accent-lighter shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                    onClick={() => dispatch(bidsModalShow())}
+                  >
+                    {nftListing
+                      ? "Purchase for " +
+                        nftListing.price.basisPoints.toNumber() /
+                          LAMPORTS_PER_SOL +
+                        " SOL"
+                      : "Not purchasable"}
+                  </button>
+                }
                 {/* <!-- end bid --> */}
               </div>
               {/* <!-- end details --> */}
             </div>
           )}
 
-          <ItemsTabs />
+          <ItemsTabs nft={nft} />
         </div>
       </section>
       {/* <!-- end item --> */}
 
-      <More_items />
+      <More_items nfts={collectionNFTs} />
     </>
   );
 };
