@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import { useMetaplex } from "../../metaplex/useMetaplex";
 
 export default function ListingItem({
   creatorAddress,
@@ -32,6 +33,20 @@ export default function ListingItem({
   useEffect(() => {
     getUser();
   }, [creatorAddress]);
+
+  const { metaplex } = useMetaplex();
+  const { getAuctionHouse } = useAuctionHouse();
+  async function buy() {
+    const auctionHouse = await getAuctionHouse();
+
+    const l = await metaplex
+      .auctionHouse()
+      .loadListing({ lazyListing: listing });
+    console.log(l);
+    await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
+
+    await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
+  }
 
   return (
     <article>
@@ -101,9 +116,24 @@ export default function ListingItem({
         </div>
 
         <div className="mt-8 flex items-center justify-between">
-          <button className="text-accent font-display text-sm font-semibold">
+          <button
+            onClick={() => {
+              buy();
+            }}
+            className="text-accent font-display text-sm font-semibold"
+          >
             Buy
           </button>
+          <Link href={`/item/${address}`}>
+            <a className="group flex items-center">
+              <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
+                <use xlinkHref="/icons.svg#icon-history"></use>
+              </svg>
+              <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
+                View History
+              </span>
+            </a>
+          </Link>
         </div>
       </div>
     </article>

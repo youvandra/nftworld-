@@ -85,6 +85,7 @@ const ItemsTabs = ({ nft }) => {
                     Contract Address:
                   </span>
                   <a
+                    rel="noreferrer"
                     target={"_blank"}
                     href={`https://solscan.io/address/${nft?.address?.toBase58()}`}
                     className="text-accent"

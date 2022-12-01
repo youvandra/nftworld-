@@ -4,77 +4,67 @@ import { useSelector } from "react-redux";
 import Feature_collections_data from "../../data/Feature_collections_data";
 import axios from "axios";
 import { useNFTs } from "../../metaplex/useNFTs";
+import { useSDK } from "@thirdweb-dev/react/solana";
+import { PublicKey } from "@metaplex-foundation/js";
 
 const Explore_collection_item = ({ itemFor }) => {
-  const { sortedCollectionData } = useSelector((state) => state.counter);
-
-  const [itemData, setItemData] = useState([]);
   const [data, setData] = useState(Feature_collections_data);
-  const { getCollectionsByOwner } = useNFTs();
-  const [userCollections, setUserCollections] = useState([]);
+  const sdk = useSDK();
 
   async function getCollections() {
+    if (!sdk) return;
     const collections = await axios.get("/api/getCollections");
-    if (collections.data) {
-      const formatedCollections = collections.data.map(
-        ({
-          title,
+    if (!collections.data) return;
 
+    const filteredCollections = collections.data.filter(({ creatorAddress }) =>
+      itemFor ? itemFor === creatorAddress : true
+    );
+
+    const formatedCollections = await Promise.all(
+      filteredCollections.map(
+        async ({
+          title,
           address: id,
           creator: { name: userName, profilePhoto: userImage, address },
-          itemsCount,
           bigImage,
           subImage1,
           subImage2,
           subImage3,
-        }) => ({
-          title,
-          id,
-          itemsCount,
-          userName,
-          bigImage,
-          subImage1,
-          subImage2,
-          subImage3,
-          userImage,
-          address,
-        })
-      );
-      setData(formatedCollections);
-    }
-  }
+        }) => {
+          const program = await sdk.getNFTCollection(new PublicKey(id));
+          const nfts = [];
+          // const nfts = await program.getAll({ count: 3 });
+          const itemsCount = await program.totalSupply();
 
-  async function getUserCollections() {
-    const rawCollections = await getCollectionsByOwner(itemFor);
-    const addresses = rawCollections.map(({ mintAddress }) =>
-      mintAddress.toBase58()
+          const img1 = nfts[0]?.metadata?.image;
+          const img2 = nfts[1]?.metadata?.image;
+          const img3 = nfts[2]?.metadata?.image;
+
+          return {
+            title,
+            id,
+            itemsCount,
+            userName,
+            bigImage,
+            subImage1: img1 ?? subImage1,
+            subImage2: img2 ?? subImage2,
+            subImage3: img3 ?? subImage3,
+            userImage,
+            address,
+          };
+        }
+      )
     );
-    setUserCollections(addresses);
+    setData(formatedCollections);
   }
 
   useEffect(() => {
     getCollections();
-  }, []);
-
-  useEffect(() => {
-    if (!itemFor) return;
-    getUserCollections();
-  }, [itemFor]);
-
-  useEffect(() => {
-    if (itemFor) {
-      const filteredData = data.filter(({ id }) =>
-        userCollections.includes(id)
-      );
-      setItemData(filteredData);
-    } else {
-      setItemData(data);
-    }
-  }, [sortedCollectionData, itemFor, data, userCollections]);
+  }, [sdk]);
 
   return (
     <>
-      {itemData.map((item) => {
+      {data.map((item) => {
         const {
           id,
           bigImage,
@@ -143,12 +133,16 @@ const Explore_collection_item = ({ itemFor }) => {
                   <span className="dark:text-jacarta-400 mr-1">by</span>
                   <Link href={`/user/${address}`}>
                     <a className="text-accent">
-                      <span>{userName}</span>
+                      <span>
+                        {userName?.length > 15
+                          ? `${userName?.substring(0, 13)}..`
+                          : userName}
+                      </span>
                     </a>
                   </Link>
                 </div>
                 <span className="dark:text-jacarta-300 text-sm">
-                  {itemsCount} Items
+                  {itemsCount} Item{itemsCount === 1 ? "" : "s"}
                 </span>
               </div>
             </div>

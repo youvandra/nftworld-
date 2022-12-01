@@ -9,45 +9,61 @@ import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
 import Feature_collections_data from "../../data/Feature_collections_data";
 import Link from "next/link";
 import axios from "axios";
+import { useSDK } from "@thirdweb-dev/react/solana";
+import { PublicKey } from "@metaplex-foundation/js";
 
 const Feature_collections_carousel = () => {
   const [data, setData] = useState(Feature_collections_data);
 
+  const sdk = useSDK();
+
   async function getCollections() {
+    if (!sdk) return;
     const collections = await axios.get("/api/getCollections");
-    if (collections.data) {
-      const formatedCollections = collections.data
+    if (!collections.data) return;
+    const formatedCollections = await Promise.all(
+      collections.data
         .filter(({ tending }) => tending)
         .map(
-          ({
+          async ({
             title,
-
             address: id,
-            creator: { name: userName, profilePhoto: userImage },
-            itemsCount,
+            creator: { name: userName, profilePhoto: userImage, address },
             bigImage,
             subImage1,
             subImage2,
             subImage3,
-          }) => ({
-            title,
-            id,
-            itemsCount,
-            userName,
-            bigImage,
-            subImage1,
-            subImage2,
-            subImage3,
-            userImage,
-          })
-        );
-      setData(formatedCollections);
-    }
+          }) => {
+            const program = await sdk.getNFTCollection(new PublicKey(id));
+            const nfts = [];
+            // const nfts = await program.getAll({ count: 3 });
+            const itemsCount = await program.totalSupply();
+
+            const img1 = nfts[0]?.metadata?.image;
+            const img2 = nfts[1]?.metadata?.image;
+            const img3 = nfts[2]?.metadata?.image;
+
+            return {
+              title,
+              id,
+              itemsCount,
+              userName,
+              bigImage,
+              subImage1: img1 ?? subImage1,
+              subImage2: img2 ?? subImage2,
+              subImage3: img3 ?? subImage3,
+              userImage,
+              address,
+            };
+          }
+        )
+    );
+    setData(formatedCollections);
   }
 
   useEffect(() => {
     getCollections();
-  }, []);
+  }, [sdk]);
   return (
     <>
       <Swiper
@@ -150,7 +166,11 @@ const Feature_collections_carousel = () => {
                       <span className="dark:text-jacarta-400 mr-1">by</span>
                       <Link href={`/collection/${itemLink}`}>
                         <a className="text-accent">
-                          <span>{userName}</span>
+                          <span>
+                            {userName?.length > 15
+                              ? `${userName?.substring(0, 13)}..`
+                              : userName}
+                          </span>
                         </a>
                       </Link>
                     </div>

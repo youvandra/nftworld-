@@ -48,6 +48,7 @@ const Item = () => {
     const price = Math.max(...prices);
     const index = prices.indexOf(price);
     setNFTListing(listing[index]);
+    console.log(listing[index]);
   }
 
   async function getCreator() {
@@ -59,6 +60,23 @@ const Item = () => {
         setCreator(data);
       });
   }
+
+  const [seller, setSeller] = useState();
+
+  async function getSeller() {
+    if (!nftListing) return;
+    axios
+      .get(
+        `/api/getUserByAddress?address=${nftListing?.sellerAddress?.toBase58()}`
+      )
+      .then(({ data }) => {
+        setSeller(data);
+      });
+  }
+
+  useEffect(() => {
+    getSeller();
+  }, [nftListing]);
 
   useEffect(() => {
     if (!nft) return;
@@ -239,7 +257,69 @@ const Item = () => {
                 </div>
 
                 {/* <!-- Bid --> */}
-                {
+
+                {nftListing && (
+                  <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-2lg border bg-white p-8">
+                    <div className="mb-8 sm:flex sm:flex-wrap">
+                      {/* <!-- Highest bid --> */}
+                      <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
+                        <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
+                          <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
+                            Listed by{" "}
+                          </span>
+                          <Link href={`/user/${seller?.address}`}>
+                            <a className="text-accent text-sm font-bold">
+                              {seller?.name}
+                            </a>
+                          </Link>
+                        </div>
+                        <div className="mt-3 flex">
+                          <figure className="mr-4 shrink-0">
+                            <Link href={`/user/${seller?.address}`}>
+                              <a className="relative block">
+                                <img
+                                  src={
+                                    seller?.profilePhoto ??
+                                    "/images/avatars/avatar_4.jpg"
+                                  }
+                                  alt="avatar"
+                                  className="rounded-2lg h-12 w-12"
+                                  loading="lazy"
+                                />
+                              </a>
+                            </Link>
+                          </figure>
+                          <div>
+                            Price:
+                            <div className="flex items-center whitespace-nowrap">
+                              <Tippy content={<span>SOL</span>}>
+                                <img
+                                  className="icon mr-1 h-4 w-4"
+                                  src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                                />
+                              </Tippy>
+                              <span className="text-green text-lg font-medium leading-tight tracking-tight">
+                                {nftListing?.price?.basisPoints /
+                                  LAMPORTS_PER_SOL}{" "}
+                                SOL
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Link href="#">
+                      <button
+                        className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                        onClick={() => dispatch(bidsModalShow())}
+                      >
+                        Purchase
+                      </button>
+                    </Link>
+                  </div>
+                )}
+                {/* {
                   <button
                     disabled={!nftListing}
                     className="bg-accent disabled:bg-accent-lighter shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
@@ -252,7 +332,7 @@ const Item = () => {
                         " SOL"
                       : "Not purchasable"}
                   </button>
-                }
+                } */}
                 {/* <!-- end bid --> */}
               </div>
               {/* <!-- end details --> */}

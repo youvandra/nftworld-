@@ -155,8 +155,9 @@ const Auctions_categories = () => {
                       <span className="dark:text-jacarta-300">Price</span>
                       <span className="dark:text-jacarta-100 text-jacarta-700">
                         {" " +
-                          price?.basisPoints?.toNumber() / LAMPORTS_PER_SOL ??
-                          1 + " SOL"}
+                          (price?.basisPoints?.toNumber() / LAMPORTS_PER_SOL ??
+                            1) +
+                          " SOL"}
                       </span>
                     </div>
 
@@ -167,6 +168,16 @@ const Auctions_categories = () => {
                       >
                         Buy
                       </button>
+                      <Link href={itemLink}>
+                        <a className="group flex items-center">
+                          <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
+                            <use xlinkHref="/icons.svg#icon-history"></use>
+                          </svg>
+                          <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
+                            View History
+                          </span>
+                        </a>
+                      </Link>
                     </div>
                   </div>
                 </article>

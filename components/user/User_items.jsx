@@ -41,21 +41,18 @@ const User_items = ({ address }) => {
     },
   ];
 
-  const { publicKey } = useWallet();
-
   const { getListings } = useAuctionHouse();
   const [userListings, setUserListings] = useState([]);
 
   async function getUserListings() {
-    if (!publicKey) return;
+    if (!address) return;
     const listing = await getListings({ seller: new PublicKey(address) });
-    console.log(listing);
     setUserListings(listing);
   }
 
   useEffect(() => {
     getUserListings();
-  }, [publicKey]);
+  }, [address]);
 
   return (
     <>
@@ -105,13 +102,12 @@ const User_items = ({ address }) => {
                 {/* <!-- Filter --> */}
                 <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
                   {userListings.map(
-                    ({
-                      creators,
-                      metadata: { image, name },
-                      listing,
-                      address,
-                    }) => (
+                    (
+                      { creators, metadata: { image, name }, listing, address },
+                      i
+                    ) => (
                       <ListingItem
+                        key={i}
                         creatorAddress={creators[0]?.address?.toBase58()}
                         listing={listing}
                         image={image}

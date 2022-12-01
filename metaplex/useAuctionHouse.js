@@ -22,10 +22,10 @@ export function useAuctionHouse() {
       .findListings({ auctionHouse, ...args });
 
     const listing = await Promise.all(
-      rawListings.map(async ({ metadataAddress, ...l }) => {
+      rawListings.map(async (l) => {
         const rawNFTS = await metaplex
           .nfts()
-          .findByMetadata({ metadata: metadataAddress });
+          .findByMetadata({ metadata: l.metadataAddress });
         const nfts = await returnNFTwithMetadata(rawNFTS);
         return { ...nfts, listing: l };
       })

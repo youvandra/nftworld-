@@ -144,6 +144,9 @@ const MblNavbar = ({ theme }) => {
     if (router.asPath.includes("create")) {
       localStorage.setItem("navItemValue", 33);
     }
+    if (router.asPath.includes("add-collection")) {
+      localStorage.setItem("navItemValue", 34);
+    }
 
     const value = localStorage.getItem("navItemValue");
     setNavItemValue(+value);
@@ -158,158 +161,10 @@ const MblNavbar = ({ theme }) => {
       setnavText("collection");
     } else if (navItemValue === 33) {
       setnavText("create");
+    } else if (navItemValue === 34) {
+      setnavText("add-collection");
     }
   }, [dispatch, navItemValue, router]);
-
-  const homenavData = [
-    {
-      id: 1,
-      text: "home 1",
-      url: "/",
-      New: false,
-    },
-    {
-      id: 2,
-      text: "home 2",
-      url: "/home/home_2",
-      New: false,
-    },
-    {
-      id: 3,
-      text: "home 3",
-      url: "/home/home_3",
-      New: false,
-    },
-    {
-      id: 4,
-      text: "home 4",
-      url: "/home/home_4",
-      New: false,
-    },
-    {
-      id: 5,
-      text: "home 5",
-      url: "/home/home_5",
-      New: false,
-    },
-    {
-      id: 6,
-      text: "home 6",
-      url: "/home/home_6",
-      New: false,
-    },
-    {
-      id: 7,
-      text: "home 7",
-      url: "/home/home_7",
-      New: true,
-    },
-    {
-      id: 8,
-      text: "home 8",
-      url: "/home/home_8",
-      New: true,
-    },
-  ];
-
-  const pageTextData = [
-    {
-      id: 9,
-      text: "Case Studies",
-      href: "/case-studies",
-      New: true,
-    },
-    {
-      id: 10,
-      text: "Single Case Study",
-      href: "/case-studies/case_study_1",
-      New: true,
-    },
-    {
-      id: 11,
-      text: "Careers",
-      href: "/careers",
-      New: true,
-    },
-    {
-      id: 12,
-      text: "Item Details",
-      href: "/item/item_20",
-      New: false,
-    },
-    {
-      id: 13,
-      text: "Explore Collections",
-      href: "/collection/explore_collection",
-      New: false,
-    },
-    {
-      id: 14,
-      text: "Collection",
-      href: "/collection/avatar_1",
-      New: false,
-    },
-    {
-      id: 15,
-      text: "Activity",
-      href: "/activity",
-      New: false,
-    },
-    {
-      id: 16,
-      text: "Rankings",
-      href: "/rankings",
-      New: false,
-    },
-    {
-      id: 17,
-      text: "User",
-      href: "/user/avatar_6",
-      New: false,
-    },
-    {
-      id: 18,
-      text: "Edit Profile",
-      href: "/edit-profile",
-      New: false,
-    },
-    {
-      id: 19,
-      text: "About",
-      href: "/about",
-      New: false,
-    },
-    {
-      id: 20,
-      text: "Contact",
-      href: "/contact",
-      New: false,
-    },
-    {
-      id: 21,
-      text: "Wallet",
-      href: "/wallet",
-      New: false,
-    },
-    {
-      id: 22,
-      text: "Login",
-      href: "/login",
-      New: false,
-    },
-    {
-      id: 23,
-      text: "Page 404",
-      href: "/404",
-      New: false,
-    },
-    {
-      id: 24,
-      text: "Terms Of Service",
-      href: "/tarms",
-      New: false,
-    },
-  ];
 
   const resourcesData = [
     {
@@ -460,7 +315,7 @@ const MblNavbar = ({ theme }) => {
                       <span
                         className={navText === "create" ? "text-accent" : ""}
                       >
-                        Add NFT
+                        Create NFT
                       </span>
                     </button>
                   </a>
@@ -471,7 +326,7 @@ const MblNavbar = ({ theme }) => {
                   <a
                     onClick={() => {
                       dispatch(closeMblMenu());
-                      localStorage.setItem("navItemValue", 33);
+                      localStorage.setItem("navItemValue", 34);
                     }}
                   >
                     <button
@@ -482,9 +337,11 @@ const MblNavbar = ({ theme }) => {
                       }
                     >
                       <span
-                        className={navText === "create" ? "text-accent" : ""}
+                        className={
+                          navText === "add-collection" ? "text-accent" : ""
+                        }
                       >
-                        Add Collection
+                        Create Collection
                       </span>
                     </button>
                   </a>
@@ -1043,7 +900,7 @@ const MblNavbar = ({ theme }) => {
                       <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />{" "}
                     </svg>
                     <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
-                      Add collection
+                      Create collection
                     </span>
                   </a>
                 </Link>

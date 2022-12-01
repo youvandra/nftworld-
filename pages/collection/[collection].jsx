@@ -17,7 +17,7 @@ const Collection = () => {
   const router = useRouter();
   const address = router.query.collection;
   const [
-    { title, image, icon, creator, text, details, creatorAddress, banner },
+    { title, image, icon, creator, text, creatorAddress, banner },
     setCollection,
   ] = useState(collection_item_data[0]);
 
@@ -25,17 +25,19 @@ const Collection = () => {
     (state) => state.counter
   );
 
+  const [details, setdetails] = useState([]);
+
   async function getCollection() {
     const { data } = await axios.get(
       `/api/getCollectionByAddress?address=${address}`
     );
     if (!data) return;
     const formatedDetails = [
-      { detailsNumber: data.itemsCount, detailsText: "Items" },
       { detailsNumber: data.owners, detailsText: "Owners" },
       { detailsNumber: data.floorPrice, detailsText: "Floor Rrice" },
       { detailsNumber: data.volumeTraded, detailsText: "Volume Traded" },
     ];
+    setdetails(formatedDetails);
     const fromatedCollection = {
       title: data.title,
       image: data.image,
@@ -120,6 +122,16 @@ const Collection = () => {
                 </div>
 
                 <div className="dark:bg-jacarta-800 dark:border-jacarta-600 border-jacarta-100 mb-8 inline-flex flex-wrap items-center justify-center rounded-xl border bg-white">
+                  <Link href="#">
+                    <a className="dark:border-jacarta-600 border-jacarta-100 w-1/2 rounded-l-xl border-r py-4 hover:shadow-md sm:w-32">
+                      <div className="text-jacarta-700 mb-1 text-base font-bold dark:text-white">
+                        {sortedtrendingCategoryItemData?.length}
+                      </div>
+                      <div className="text-2xs dark:text-jacarta-400 font-medium tracking-tight">
+                        Items
+                      </div>
+                    </a>
+                  </Link>{" "}
                   {details.map(({ detailsNumber, detailsText }, id) => {
                     return (
                       <Link href="#" key={id}>

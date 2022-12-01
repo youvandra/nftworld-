@@ -39,7 +39,23 @@ const Collection_dropdown2 = ({
           className="dark:bg-jacarta-700 dropdown-toggle border-jacarta-100 dark:border-jacarta-600 dark:text-jacarta-300 flex items-center justify-between rounded-lg border bg-white py-3 px-3 show z-50 relative"
           onClick={() => handleDropdown()}
         >
-          <span className="">Select collection</span>
+          {!activeItem ? (
+            <span>Select collection</span>
+          ) : (
+            <span className="flex items-center space-x-3">
+              {data.filter(({ id }) => id === activeItem)[0]?.image && (
+                <img
+                  src={data.filter(({ id }) => id === activeItem)[0]?.image}
+                  className="h-8 w-8 rounded-full"
+                  loading="lazy"
+                  alt="avatar"
+                />
+              )}
+              <span className="text-jacarta-700 dark:text-white">
+                {data.filter(({ id }) => id === activeItem)[0]?.text}
+              </span>
+            </span>
+          )}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
