@@ -408,7 +408,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -435,7 +435,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -462,7 +462,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -489,7 +489,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -516,7 +516,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -543,7 +543,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -570,7 +570,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -597,7 +597,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
@@ -624,7 +624,7 @@ const MblNavbar = ({ theme }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/collection/explore_collection">
+                    <Link href="/404">
                       <a
                         className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors"
                         onClick={() => {
