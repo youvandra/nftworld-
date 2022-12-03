@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bidsModalHide } from '../../redux/counterSlice';
+import { Connection } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+
+async function getBalance(publicKey){
+	const connection = new Connection("https://api.devnet.solana.com");
+	return await connection.getBalance(publicKey);
+}
 
 const BidsModal = () => {
 	const { bidsModal } = useSelector((state) => state.counter);
 	const dispatch = useDispatch();
-	const [ETHAmount, setETHAmount] = useState(0.05);
+	const [SOLAmount, setSOLAmount] = useState(0.05);
+	const { connected, wallet, publicKey } = useWallet();
+	const [balance, setBalance] = useState(0);
 
-	const handleEThAmount = (e) => {
+	useEffect(() => {
+		if (!publicKey) return;
+		getBalance(publicKey).then((b) => {
+			setBalance(b);
+		});
+	}, [publicKey]);
+
+	const handleSolAmount = (e) => {
 		e.preventDefault();
-		setETHAmount(e.target.value);
+		setSOLAmount(e.target.value);
 	};
 	return (
 		<div>
@@ -44,20 +60,19 @@ const BidsModal = () => {
 
 							<div className="dark:border-jacarta-600 border-jacarta-100 relative mb-2 flex items-center overflow-hidden rounded-lg border">
 								<div className="border-jacarta-100 bg-jacarta-50 flex flex-1 items-center self-stretch border-r px-2">
-									<span>
-										<svg className="icon icon-ETH mr-1 h-5 w-5">
-											<use xlinkHref="/icons.svg#icon-ETH"></use>
-										</svg>
-									</span>
-									<span className="font-display text-jacarta-700 text-sm">ETH</span>
+									<img
+									className="icon mr-1 h-4 w-4"
+									src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+									/>
+									<span className="font-display text-jacarta-700 text-sm">SOL</span>
 								</div>
 
 								<input
 									type="number"
 									className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
 									placeholder="Amount"
-									value={ETHAmount}
-									onChange={(e) => handleEThAmount(e)}
+									value={SOLAmount}
+									onChange={(e) => handleSolAmount(e)}
 								/>
 
 								<div className="bg-jacarta-50 border-jacarta-100 flex flex-1 justify-end self-stretch border-l dark:text-jacarta-700">
@@ -66,7 +81,7 @@ const BidsModal = () => {
 							</div>
 
 							<div className="text-right">
-								<span className="dark:text-jacarta-400 text-sm">Balance: 0.0000 WETH</span>
+								<span className="dark:text-jacarta-400 text-sm">Balance: {(balance / 1000000000).toPrecision(4)} SOL</span>
 							</div>
 
 							{/* <!-- Terms --> */}
