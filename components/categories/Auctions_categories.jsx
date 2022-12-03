@@ -45,9 +45,9 @@ const Auctions_categories = () => {
               bigImage,
               title,
               price,
-              creatorName: user.name,
-              creatorImage: user.profilePhoto,
-              creatorAddress: user.address,
+              creatorName: user?.name ?? "unkown user",
+              creatorImage: user?.profilePhoto,
+              creatorAddress: user?.address,
             };
           }
         )
@@ -98,7 +98,9 @@ const Auctions_categories = () => {
                           <Link href={`/user/${creatorAddress ?? "#"}`}>
                             <a>
                               <img
-                                src={creatorImage ?? ""}
+                                src={
+                                  creatorImage ?? "/images/user/user_avatar.gif"
+                                }
                                 alt="creator"
                                 className="h-6 w-6 rounded-full"
                                 height={24}

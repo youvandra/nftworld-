@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-const ListModal = ({ onClose, isOpen, nft }) => {
-  const { list } = useAuctionHouse();
+const BidModal = ({ onClose, isOpen, nft }) => {
+  const { bid } = useAuctionHouse();
   const { handleSubmit, register } = useForm();
   const [collection, setCollection] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +27,7 @@ const ListModal = ({ onClose, isOpen, nft }) => {
 
   async function onSubmit({ price }) {
     setIsLoading(true);
-    list(nft.mintAddress.toBase58(), price)
+    bid(nft.mintAddress, price)
       .finally(() => {
         setIsLoading(false);
       })
@@ -44,7 +44,7 @@ const ListModal = ({ onClose, isOpen, nft }) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="buyNowModalLabel">
-                List NFT
+                Bid NFT
               </h5>
               <button
                 type="button"
@@ -71,7 +71,7 @@ const ListModal = ({ onClose, isOpen, nft }) => {
                   <img
                     src={nft.metadata.image}
                     alt="avatar 2"
-                    className="rounded-2lg max-h-96 "
+                    className="rounded-2lg max-h-96 max-w-xs"
                     loading="lazy"
                   />
                 </figure>
@@ -127,7 +127,7 @@ const ListModal = ({ onClose, isOpen, nft }) => {
                   onClick={handleSubmit(onSubmit)}
                   className="bg-accent shadow-accent-volume disabled:bg-accent-lighter hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
                 >
-                  {isLoading ? "Listing..." : "List"}
+                  {isLoading ? "Bidding..." : "Bid"}
                 </button>
               </div>
             </div>
@@ -138,4 +138,4 @@ const ListModal = ({ onClose, isOpen, nft }) => {
   );
 };
 
-export default ListModal;
+export default BidModal;

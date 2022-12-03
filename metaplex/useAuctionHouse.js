@@ -65,11 +65,12 @@ export function useAuctionHouse() {
 
     return await metaplex.auctionHouse().cancelBid({ auctionHouse, bid });
   }
-
-  async function sellBid(bid) {
+  async function cancelListing(bid) {
     const auctionHouse = await getAuctionHouse();
 
-    metaplex.auctionHouse().sell({ auctionHouse, bid });
+    return await metaplex
+      .auctionHouse()
+      .cancelListing({ auctionHouse, listing });
   }
 
   async function list(address, price) {
@@ -81,5 +82,18 @@ export function useAuctionHouse() {
       .list({ auctionHouse, mintAccount, price: sol(price) });
   }
 
-  return { getAuctionHouse, getListings, getBids, sellBid, cancelBid, list };
+  async function bid(mintAccount, price) {
+    const auctionHouse = await getAuctionHouse();
+    await metaplex.auctionHouse().bid({ auctionHouse, mintAccount, price });
+  }
+
+  return {
+    getAuctionHouse,
+    getListings,
+    getBids,
+    cancelBid,
+    list,
+    bid,
+    cancelListing,
+  };
 }

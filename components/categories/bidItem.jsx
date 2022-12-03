@@ -4,9 +4,9 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import axios from "axios";
 import { useWallet } from "@solana/wallet-adapter-react";
-import ListModal from "../modal/ListModal";
+import BidModal from "../modal/BidModal";
 
-const UserItem = ({ nfts }) => {
+const BidItem = ({ nfts }) => {
   const { publicKey } = useWallet();
   const [creator, setCreator] = useState();
   const [showListModal, setShowListModal] = useState(false);
@@ -28,7 +28,7 @@ const UserItem = ({ nfts }) => {
   return (
     <>
       {showListModal && (
-        <ListModal
+        <BidModal
           isOpen={showListModal}
           onClose={() => {
             setShowListModal(false);
@@ -90,7 +90,7 @@ const UserItem = ({ nfts }) => {
                         setShowListModal(true);
                       }}
                     >
-                      List now
+                      Bid now
                     </button>
                     <Link href={`/item/${itemLink}`}>
                       <a className="group flex items-center">
@@ -113,4 +113,4 @@ const UserItem = ({ nfts }) => {
   );
 };
 
-export default UserItem;
+export default BidItem;
