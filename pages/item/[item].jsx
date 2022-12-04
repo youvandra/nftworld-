@@ -14,8 +14,9 @@ import { PublicKey } from "@metaplex-foundation/js";
 import { returnNFTwithMetadata } from "../../utils/returnNFTwithMetadata";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import axios from "axios";
-import { useProgram, useNFTs } from "@thirdweb-dev/react/solana";
+import { useProgram, useNFTs, useSDK } from "@thirdweb-dev/react/solana";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { data } from "autoprefixer";
 
 const Item = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const Item = () => {
       .nfts()
       .findByMint({ mintAddress: new PublicKey(address) });
     const _nft = await returnNFTwithMetadata(rawNFT);
+    console.log(_nft);
     setNFT(_nft);
   }
 
@@ -48,7 +50,6 @@ const Item = () => {
     const price = Math.max(...prices);
     const index = prices.indexOf(price);
     setNFTListing(listing[index]);
-    console.log(listing[index]);
   }
 
   async function getCreator() {
@@ -60,6 +61,26 @@ const Item = () => {
         setCreator(data);
       });
   }
+
+  const sdk = useSDK();
+  const [owner, setOwner] = useState();
+  async function getOwner() {
+    if (!sdk || !nft) return;
+    console.log(nft);
+    const collection = await sdk.getNFTCollection(
+      nft?.collection?.address?.toBase58()
+    );
+    const ownerAddress = await collection.ownerOf(nft?.address?.toBase58());
+    axios
+      .get(`/api/getUserByAddress?address=${ownerAddress}`)
+      .then(({ data }) => {
+        setOwner(data);
+      });
+  }
+
+  useEffect(() => {
+    getOwner();
+  }, [sdk, nft]);
 
   const [seller, setSeller] = useState();
 
@@ -250,6 +271,40 @@ const Item = () => {
                       <Link href={`/user/${creator?.address}`}>
                         <a className="text-accent block">
                           <span className="text-sm font-bold">creator</span>
+                        </a>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="mr-8 mb-4 flex">
+                    <figure className="mr-4 shrink-0">
+                      <Link href={`/user/${owner?.address}`}>
+                        <a className="relative block">
+                          <img
+                            src={owner?.profilePhoto}
+                            alt={"owner"}
+                            className="rounded-2lg h-12 w-12"
+                            loading="lazy"
+                          />
+                          <div
+                            className="dark:border-jacarta-600 bg-green absolute -right-3 top-[60%] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
+                            data-tippy-content="Verified Collection"
+                          >
+                            <Tippy content={<span>Verified Collection</span>}>
+                              <svg className="icon h-[.875rem] w-[.875rem] fill-white">
+                                <use xlinkHref="/icons.svg#icon-right-sign"></use>
+                              </svg>
+                            </Tippy>
+                          </div>
+                        </a>
+                      </Link>
+                    </figure>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-jacarta-400 block text-sm dark:text-white">
+                        {owner?.name + " "}
+                      </span>
+                      <Link href={`/user/${owner?.address}`}>
+                        <a className="text-accent block">
+                          <span className="text-sm font-bold">owner</span>
                         </a>
                       </Link>
                     </div>

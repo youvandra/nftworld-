@@ -10,6 +10,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import auctions_category_data from "../../data/auctions_category_data";
 import ListingItem from "../categories/listingItem";
 import { PublicKey } from "@metaplex-foundation/js";
+import Loader from "../Loader";
 
 const User_items = ({ address }) => {
   const [itemActive, setItemActive] = useState(1);
@@ -42,7 +43,7 @@ const User_items = ({ address }) => {
   ];
 
   const { getListings } = useAuctionHouse();
-  const [userListings, setUserListings] = useState([]);
+  const [userListings, setUserListings] = useState();
 
   async function getUserListings() {
     if (!address) return;
@@ -98,26 +99,35 @@ const User_items = ({ address }) => {
             </TabList>
 
             <TabPanel>
-              <div>
-                {/* <!-- Filter --> */}
-                <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-                  {userListings.map(
-                    (
-                      { creators, metadata: { image, name }, listing, address },
-                      i
-                    ) => (
-                      <ListingItem
-                        key={i}
-                        creatorAddress={creators[0]?.address?.toBase58()}
-                        listing={listing}
-                        image={image}
-                        name={name}
-                        address={address?.toBase58()}
-                      />
-                    )
-                  )}
+              {!userListings ? (
+                <Loader />
+              ) : (
+                <div>
+                  {/* <!-- Filter --> */}
+                  <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
+                    {userListings.map(
+                      (
+                        {
+                          creators,
+                          metadata: { image, name },
+                          listing,
+                          address,
+                        },
+                        i
+                      ) => (
+                        <ListingItem
+                          key={i}
+                          creatorAddress={creators[0]?.address?.toBase58()}
+                          listing={listing}
+                          image={image}
+                          name={name}
+                          address={address?.toBase58()}
+                        />
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </TabPanel>
             <TabPanel>
               <div>
@@ -133,9 +143,7 @@ const User_items = ({ address }) => {
             </TabPanel>
             <TabPanel>
               {/* <!-- Grid --> */}
-              <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-                <Explore_collection_item itemFor={address} />
-              </div>
+              <Explore_collection_item itemFor={address} />
             </TabPanel>
             <TabPanel>
               <div>

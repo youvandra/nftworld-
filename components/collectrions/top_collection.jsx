@@ -4,6 +4,8 @@ import Link from "next/link";
 import { collection_data } from "../../data/collection_data";
 import HeadLine from "../headLine";
 import axios from "axios";
+import { useSDK } from "@thirdweb-dev/react/solana";
+import { PublicKey } from "@metaplex-foundation/js";
 
 const Top_collection = () => {
   const [timeActiveText, setTimeActiveText] = useState("last 7 days");
@@ -25,11 +27,16 @@ const Top_collection = () => {
     },
   ];
 
+  const sdk = useSDK();
+
   async function getCollections() {
+    if (!sdk) return;
     const collections = await axios.get("/api/getCollections");
-    if (collections.data) {
-      const formatedCollections = collections.data.map(
-        ({
+    if (!collections.data) return;
+
+    const formatedCollections = await Promise.all(
+      collections.data.map(
+        async ({
           title,
           image,
           isVerified: icon,
@@ -37,16 +44,31 @@ const Top_collection = () => {
           postTime,
           postDate,
           address,
-        }) => ({ title, image, icon, amount, postTime, postDate, address })
-      );
-      setData(formatedCollections);
-      setAllData(formatedCollections);
-    }
+          creator,
+        }) => {
+          const program = await sdk.getNFTCollection(new PublicKey(address));
+          const itemsCount = await program.totalSupply();
+          return {
+            title,
+            image,
+            icon,
+            amount,
+            postTime,
+            postDate,
+            address,
+            creator,
+            itemsCount,
+          };
+        }
+      )
+    );
+    setData(formatedCollections);
+    setAllData(formatedCollections);
   }
 
   useEffect(() => {
     getCollections();
-  }, []);
+  }, [sdk]);
 
   const handleFilter = (text) => {
     setTimeActiveText(text);
@@ -134,61 +156,99 @@ const Top_collection = () => {
 
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-[1.875rem] lg:grid-cols-4">
             {data.map((item, id) => {
-              const { image, title, icon, amount, address } = item;
+              const {
+                image,
+                title,
+                icon,
+                amount,
+                address,
+                creator,
+                itemsCount,
+              } = item;
               const itemLink = address;
 
               return (
                 <div
-                  className="border-jacarta-100 dark:bg-jacarta-700 rounded-2xl flex border bg-white py-4 px-7 transition-shadow hover:shadow-lg dark:border-transparent"
+                  className="border-jacarta-100 dark:bg-jacarta-700 rounded-2xl border bg-white py-4 px-7 transition-shadow hover:shadow-lg dark:border-transparent"
                   key={id}
                 >
-                  <figure className="mr-4 shrink-0">
-                    <Link href={"/collection/" + itemLink}>
-                      <a className="relative block">
-                        {/* <img src={image} alt={title} className="rounded-2lg" /> */}
-                        <img
-                          src={image}
-                          alt={title}
-                          className="rounded-2lg aspect-square"
-                          height={48}
-                          width={48}
-                          style={{ objectFit: "cover" }}
-                        />
-                        <div className="dark:border-jacarta-600 bg-jacarta-700 absolute -left-3 top-1/2 flex h-6 w-6 -translate-y-2/4 items-center justify-center rounded-full border-2 border-white text-xs text-white">
-                          {id + 1}
-                        </div>
-                        {icon && (
-                          <div
-                            className="dark:border-jacarta-600 bg-green absolute -left-3 top-[60%] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
-                            data-tippy-content="Verified Collection"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              width="24"
-                              height="24"
-                              className="h-[.875rem] w-[.875rem] fill-white"
-                            >
-                              <path fill="none" d="M0 0h24v24H0z"></path>
-                              <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
-                            </svg>
+                  <div className="flex">
+                    <figure className="mr-4 shrink-0">
+                      <Link href={"/collection/" + itemLink}>
+                        <a className="relative block">
+                          {/* <img src={image} alt={title} className="rounded-2lg" /> */}
+                          <img
+                            src={image}
+                            alt={title}
+                            className="rounded-2lg aspect-square"
+                            height={48}
+                            width={48}
+                            style={{ objectFit: "cover" }}
+                          />
+                          <div className="dark:border-jacarta-600 bg-jacarta-700 absolute -left-3 top-1/2 flex h-6 w-6 -translate-y-2/4 items-center justify-center rounded-full border-2 border-white text-xs text-white">
+                            {id + 1}
                           </div>
-                        )}
-                      </a>
-                    </Link>
-                  </figure>
-                  <div>
-                    <Link href={"/collection/" + itemLink}>
-                      <a className="block">
-                        <span className="font-display text-jacarta-700 hover:text-accent font-semibold dark:text-white">
-                          {title}
-                        </span>
-                      </a>
-                    </Link>
-                    <span className="dark:text-jacarta-300 text-sm">
-                      {amount} SOL
-                    </span>
+                          {icon && (
+                            <div
+                              className="dark:border-jacarta-600 bg-green absolute -left-3 top-[60%] flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
+                              data-tippy-content="Verified Collection"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                height="24"
+                                className="h-[.875rem] w-[.875rem] fill-white"
+                              >
+                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
+                              </svg>
+                            </div>
+                          )}
+                        </a>
+                      </Link>
+                    </figure>
+                    <div>
+                      <Link href={"/collection/" + itemLink}>
+                        <a className="block">
+                          <span className="font-display text-jacarta-700 hover:text-accent font-semibold dark:text-white">
+                            {title}
+                          </span>
+                        </a>
+                      </Link>
+                      <span className="dark:text-jacarta-300 text-sm">
+                        {amount} SOL
+                      </span>
+                    </div>
                   </div>
+                  {creator && (
+                    <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
+                      <div className="flex flex-wrap items-center">
+                        <Link href={`/user/${creator?.address}`}>
+                          <a className="mr-2 shrink-0">
+                            <img
+                              src={creator?.profilePhoto}
+                              alt="owner"
+                              className="h-5 w-5 rounded-full"
+                            />
+                          </a>
+                        </Link>
+                        <span className="dark:text-jacarta-400 mr-1">by</span>
+                        <Link href={`/user/${creator?.address}`}>
+                          <a className="text-accent">
+                            <span>
+                              {creator?.name?.length > 15
+                                ? `${creator?.name?.substring(0, 8)}..`
+                                : creator?.name}
+                            </span>
+                          </a>
+                        </Link>
+                      </div>
+                      <span className="dark:text-jacarta-300 text-sm">
+                        {itemsCount} Item{itemsCount === 1 ? "" : "s"}
+                      </span>
+                    </div>
+                  )}
                 </div>
               );
             })}

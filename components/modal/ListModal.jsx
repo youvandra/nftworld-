@@ -90,7 +90,7 @@ const ListModal = ({ onClose, isOpen, nft }) => {
                   </h3>
                   <div className="flex flex-wrap items-center">
                     <span className="dark:text-jacarta-300 text-jacarta-500 mr-1 block text-sm">
-                      Creator Earnings: {nft.sellerFeeBasisPoints}%
+                      Creator Earnings: {nft.sellerFeeBasisPoints / 100}%
                     </span>
                     <span data-tippy-content="The creator of this collection will receive 5% of the sale total from future sales of this item.">
                       <svg

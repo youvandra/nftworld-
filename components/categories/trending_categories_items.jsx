@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { tranding_category_filter } from "../../data/categories_data";
 import CategoryItem from "./categoryItem";
-import { trendingCategoryData } from "../../data/categories_data";
-import Tippy from "@tippyjs/react";
 import Recently_added_dropdown from "../dropdown/recently_added_dropdown";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateTrendingCategoryItemData } from "../../redux/counterSlice";
 import { useNFTs } from "../../metaplex/useNFTs";
 import { useRouter } from "next/router";
 import OwnedItem from "./ownedItem";
+import Loader from "../Loader";
 
 const Trending_categories_items = ({ type }) => {
-  const [itemdata, setItemdata] = useState(trendingCategoryData);
+  const [itemdata, setItemdata] = useState([]);
   const dispatch = useDispatch();
-  const { trendingCategorySorText } = useSelector((state) => state.counter);
   const [filterVal, setFilterVal] = useState(0);
   const { getNFTsByOwner, getNFTsByCreator } = useNFTs();
   const { query } = useRouter();
   const address = query.user;
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getOwnedNFTs() {
     const nfts = await getNFTsByOwner(address);
@@ -44,9 +43,16 @@ const Trending_categories_items = ({ type }) => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     if (!address) return;
-    if (type === "owned") getOwnedNFTs();
-    if (type === "created") getCreatedNFTs();
+    if (type === "owned")
+      getOwnedNFTs().finally(() => {
+        setIsLoading(false);
+      });
+    if (type === "created")
+      getCreatedNFTs().finally(() => {
+        setIsLoading(false);
+      });
   }, [address]);
 
   const handleFilter = (category) => {
@@ -80,6 +86,7 @@ const Trending_categories_items = ({ type }) => {
     dispatch(updateTrendingCategoryItemData(itemdata));
   }, [itemdata, dispatch]);
 
+  if (isLoading) return <Loader />;
   return (
     <>
       {/* <!-- Filter --> */}

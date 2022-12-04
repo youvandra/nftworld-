@@ -113,9 +113,8 @@ const Explore_collection = () => {
           </div>
 
           {/* <!-- Grid --> */}
-          <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-            <Explore_collection_item />
-          </div>
+
+          <Explore_collection_item />
         </div>
       </section>
     </>

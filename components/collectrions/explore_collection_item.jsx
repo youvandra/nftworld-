@@ -1,15 +1,15 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import Feature_collections_data from "../../data/Feature_collections_data";
 import axios from "axios";
-import { useNFTs } from "../../metaplex/useNFTs";
 import { useSDK } from "@thirdweb-dev/react/solana";
 import { PublicKey } from "@metaplex-foundation/js";
+import Loader from "../Loader";
 
 const Explore_collection_item = ({ itemFor }) => {
   const [data, setData] = useState(Feature_collections_data);
   const sdk = useSDK();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getCollections() {
     if (!sdk) return;
@@ -59,11 +59,15 @@ const Explore_collection_item = ({ itemFor }) => {
   }
 
   useEffect(() => {
-    getCollections();
+    setIsLoading(true);
+    getCollections().finally(() => {
+      setIsLoading(false);
+    });
   }, [sdk]);
 
+  if (isLoading) return <Loader />;
   return (
-    <>
+    <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
       {data.map((item) => {
         const {
           id,
@@ -149,7 +153,7 @@ const Explore_collection_item = ({ itemFor }) => {
           </article>
         );
       })}
-    </>
+    </div>
   );
 };
 

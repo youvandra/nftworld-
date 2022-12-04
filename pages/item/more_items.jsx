@@ -1,6 +1,7 @@
 import React from "react";
 import { HeadLine } from "../../components/component";
 import BidsCarousel from "../../components/carousel/bidsCarousel";
+import Loader from "../../components/Loader";
 
 const More_items = ({ nfts }) => {
   return (
@@ -14,7 +15,7 @@ const More_items = ({ nfts }) => {
 
         <div className="relative">
           {/* <!-- Slider --> */}
-          <BidsCarousel nfts={nfts} />
+          {nfts ? <BidsCarousel nfts={nfts} /> : <Loader />}
         </div>
       </div>
       {/* <!-- end hot bids --> */}

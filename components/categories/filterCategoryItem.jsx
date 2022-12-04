@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { trendingCategoryData } from "../../data/categories_data";
 import Collection_category_filter from "../collectrions/collection_category_filter";
 import { useDispatch } from "react-redux";
 import { updateTrendingCategoryItemData } from "../../redux/counterSlice";
 import OwnedItem from "./ownedItem";
 import { useNFTs, useProgram } from "@thirdweb-dev/react/solana";
 import { useRouter } from "next/router";
+import Loader from "../Loader";
 
 const FilterCategoryItem = () => {
   const dispatch = useDispatch();
 
-  const [nfts, setNFTs] = useState(trendingCategoryData.slice(0, 8));
+  const [nfts, setNFTs] = useState([]);
 
   const router = useRouter();
   const address = router.query.collection;
@@ -36,7 +36,7 @@ const FilterCategoryItem = () => {
     <div>
       {/* <!-- Filter --> */}
       <Collection_category_filter />
-      <OwnedItem />
+      {data ? <OwnedItem /> : <Loader />}
     </div>
   );
 };
