@@ -28,6 +28,7 @@ const Auctions_categories = () => {
 
   const getNFTListings = async () => {
     getListings().then(async (listings) => {
+      console.log(listings);
       const formatedLisings = await Promise.all(
         listings.map(
           async ({

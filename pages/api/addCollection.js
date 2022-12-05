@@ -12,6 +12,9 @@ export default async function handler({ body, method }, res) {
       title,
       address,
       creatorAddress,
+      subImage1,
+      subImage2,
+      subImage3,
     } = body;
 
     const postTime = new Date(Date.now()).toDateString().substring(4);
@@ -26,6 +29,9 @@ export default async function handler({ body, method }, res) {
         title,
         creatorAddress,
         postTime,
+        subImage1,
+        subImage2,
+        subImage3,
       },
     });
     return res.json(collection);

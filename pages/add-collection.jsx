@@ -26,6 +26,9 @@ export default function CreateCollection() {
     banner,
     category,
     sellerFeeBasisPoints,
+    subImage1,
+    subImage2,
+    subImage3,
   }) {
     if (!publicKey) return;
     setIsLoading(true);
@@ -44,6 +47,9 @@ export default function CreateCollection() {
       .then(async () => {
         const { pinataURL: imageFile } = await uploadFileToIPFS(image);
         const { pinataURL: bannerFile } = await uploadFileToIPFS(banner);
+        const { pinataURL: sub1 } = await uploadFileToIPFS(subImage1);
+        const { pinataURL: sub2 } = await uploadFileToIPFS(subImage2);
+        const { pinataURL: sub3 } = await uploadFileToIPFS(subImage3);
         const data = {
           creatorAddress: publicKey.toBase58(),
           address: collectionAddress,
@@ -52,7 +58,11 @@ export default function CreateCollection() {
           banner: bannerFile,
           image: imageFile,
           category,
+          subImage1: sub1,
+          subImage2: sub2,
+          subImage3: sub3,
         };
+        console.log(data);
         axios
           .post("/api/addCollection", data)
           .then(() => {
@@ -84,11 +94,28 @@ export default function CreateCollection() {
 
   const [file, setFile] = useState(null);
   const [banner, setBanner] = useState(null);
+  const [subImage1, setSubImage1] = useState(null);
+  const [subImage2, setSubImage2] = useState(null);
+  const [subImage3, setSubImage3] = useState(null);
+
+  const handleSubImage1 = (file) => {
+    setSubImage1(file);
+    setValue("subImage1", file);
+  };
+  const handleSubImage2 = (file) => {
+    setSubImage2(file);
+    setValue("subImage2", file);
+  };
+  const handleSubImage3 = (file) => {
+    setSubImage3(file);
+    setValue("subImage3", file);
+  };
 
   const handleImage = (file) => {
     setFile(file);
     setValue("image", file);
   };
+
   const handleBanner = (file) => {
     setBanner(file);
     setValue("banner", file);
@@ -105,6 +132,7 @@ export default function CreateCollection() {
   const handleCategory = (cat) => {
     setValue("category", cat);
   };
+
   return (
     <>
       <Toaster />
@@ -218,6 +246,118 @@ export default function CreateCollection() {
                       maxSize={2}
                       minSize={0}
                     />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label className="font-display text-jacarta-700 mb-2 block dark:text-white">
+                  Sub images
+                  <span className="text-red">*</span>
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 group relative flex max-w-md flex-col items-center justify-center rounded-lg border-2 border-dashed bg-white py-20 px-5 text-center">
+                    <div className="relative z-10 cursor-pointer">
+                      {!subImage1 ? (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            className="fill-jacarta-500 mb-4 inline-block dark:fill-white"
+                          >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path d="M16 13l6.964 4.062-2.973.85 2.125 3.681-1.732 1-2.125-3.68-2.223 2.15L16 13zm-2-7h2v2h5a1 1 0 0 1 1 1v4h-2v-3H10v10h4v2H9a1 1 0 0 1-1-1v-5H6v-2h2V9a1 1 0 0 1 1-1h5V6zM4 14v2H2v-2h2zm0-4v2H2v-2h2zm0-4v2H2V6h2zm0-4v2H2V2h2zm4 0v2H6V2h2zm4 0v2h-2V2h2zm4 0v2h-2V2h2z" />
+                          </svg>
+                          <p className="dark:text-jacarta-300 mx-auto max-w-xs text-xs">
+                            JPG, PNG, GIF,AVIF, WEBP, SVG, MP4, WEBM, MP3, WAV,
+                            OGG, GLB, GLTF. Max size: 100 MB
+                          </p>
+                        </>
+                      ) : (
+                        <img src={URL.createObjectURL(subImage1)} />
+                      )}
+                    </div>
+                    <div className="dark:bg-jacarta-600 bg-jacarta-50 absolute inset-4 cursor-pointer rounded opacity-0 group-hover:opacity-100 ">
+                      <FileUploader
+                        handleChange={handleSubImage1}
+                        name="file"
+                        types={fileTypes}
+                        classes="file-drag"
+                        maxSize={2}
+                        minSize={0}
+                      />
+                    </div>
+                  </div>{" "}
+                  <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 group relative flex max-w-md flex-col items-center justify-center rounded-lg border-2 border-dashed bg-white py-20 px-5 text-center">
+                    <div className="relative z-10 cursor-pointer">
+                      {!subImage2 ? (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            className="fill-jacarta-500 mb-4 inline-block dark:fill-white"
+                          >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path d="M16 13l6.964 4.062-2.973.85 2.125 3.681-1.732 1-2.125-3.68-2.223 2.15L16 13zm-2-7h2v2h5a1 1 0 0 1 1 1v4h-2v-3H10v10h4v2H9a1 1 0 0 1-1-1v-5H6v-2h2V9a1 1 0 0 1 1-1h5V6zM4 14v2H2v-2h2zm0-4v2H2v-2h2zm0-4v2H2V6h2zm0-4v2H2V2h2zm4 0v2H6V2h2zm4 0v2h-2V2h2zm4 0v2h-2V2h2z" />
+                          </svg>
+                          <p className="dark:text-jacarta-300 mx-auto max-w-xs text-xs">
+                            JPG, PNG, GIF,AVIF, WEBP, SVG, MP4, WEBM, MP3, WAV,
+                            OGG, GLB, GLTF. Max size: 100 MB
+                          </p>
+                        </>
+                      ) : (
+                        <img src={URL.createObjectURL(subImage2)} />
+                      )}
+                    </div>
+                    <div className="dark:bg-jacarta-600 bg-jacarta-50 absolute inset-4 cursor-pointer rounded opacity-0 group-hover:opacity-100 ">
+                      <FileUploader
+                        handleChange={handleSubImage2}
+                        name="file"
+                        types={fileTypes}
+                        classes="file-drag"
+                        maxSize={2}
+                        minSize={0}
+                      />
+                    </div>
+                  </div>{" "}
+                  <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 group relative flex max-w-md flex-col items-center justify-center rounded-lg border-2 border-dashed bg-white py-20 px-5 text-center">
+                    <div className="relative z-10 cursor-pointer">
+                      {!subImage3 ? (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            className="fill-jacarta-500 mb-4 inline-block dark:fill-white"
+                          >
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path d="M16 13l6.964 4.062-2.973.85 2.125 3.681-1.732 1-2.125-3.68-2.223 2.15L16 13zm-2-7h2v2h5a1 1 0 0 1 1 1v4h-2v-3H10v10h4v2H9a1 1 0 0 1-1-1v-5H6v-2h2V9a1 1 0 0 1 1-1h5V6zM4 14v2H2v-2h2zm0-4v2H2v-2h2zm0-4v2H2V6h2zm0-4v2H2V2h2zm4 0v2H6V2h2zm4 0v2h-2V2h2zm4 0v2h-2V2h2z" />
+                          </svg>
+                          <p className="dark:text-jacarta-300 mx-auto max-w-xs text-xs">
+                            JPG, PNG, GIF,AVIF, WEBP, SVG, MP4, WEBM, MP3, WAV,
+                            OGG, GLB, GLTF. Max size: 100 MB
+                          </p>
+                        </>
+                      ) : (
+                        <img src={URL.createObjectURL(subImage3)} />
+                      )}
+                    </div>
+                    <div className="dark:bg-jacarta-600 bg-jacarta-50 absolute inset-4 cursor-pointer rounded opacity-0 group-hover:opacity-100 ">
+                      <FileUploader
+                        handleChange={handleSubImage3}
+                        name="file"
+                        types={fileTypes}
+                        classes="file-drag"
+                        maxSize={2}
+                        minSize={0}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

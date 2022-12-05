@@ -13,7 +13,6 @@ export default function ListingItem({
   name,
   address,
 }) {
-  const {} = useAuctionHouse();
   const [creator, setCreator] = useState();
 
   async function getUser() {
@@ -44,7 +43,7 @@ export default function ListingItem({
       .loadListing({ lazyListing: listing });
     console.log(l);
 
-    await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
+    // await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
   }
 
   return (
