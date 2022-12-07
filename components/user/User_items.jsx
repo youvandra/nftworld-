@@ -6,11 +6,14 @@ import Trending_categories_items from "../categories/trending_categories_items";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
-import { useWallet } from "@solana/wallet-adapter-react";
-import auctions_category_data from "../../data/auctions_category_data";
+
 import ListingItem from "../categories/listingItem";
 import { PublicKey } from "@metaplex-foundation/js";
 import Loader from "../Loader";
+import { useSDK } from "@thirdweb-dev/react/solana";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { collectCollectionData } from "../../redux/counterSlice";
 
 const User_items = ({ address }) => {
   const [itemActive, setItemActive] = useState(1);
@@ -41,10 +44,13 @@ const User_items = ({ address }) => {
       icon: "activity",
     },
   ];
+  const dispatch = useDispatch();
 
   const { getListings } = useAuctionHouse();
   const [userListings, setUserListings] = useState();
+  const [collections, setCollections] = useState([]);
 
+  const sdk = useSDK();
   async function getUserListings() {
     if (!address) return;
     const listing = await getListings({ seller: new PublicKey(address) });
@@ -54,6 +60,63 @@ const User_items = ({ address }) => {
   useEffect(() => {
     getUserListings();
   }, [address]);
+
+  async function getCollections() {
+    if (!sdk || !address) return;
+    const collections = await axios.get("/api/getCollections");
+    if (!collections.data) return;
+
+    const filteredCollections = collections.data.filter(
+      ({ creatorAddress }) => address === creatorAddress
+    );
+
+    const formatedCollections = await Promise.all(
+      filteredCollections.map(
+        async ({
+          title,
+          address: id,
+          creator: { name: userName, profilePhoto: userImage, address },
+          bigImage,
+          subImage1,
+          subImage2,
+          subImage3,
+          category,
+        }) => {
+          const program = await sdk.getNFTCollection(new PublicKey(id));
+          const nfts = [];
+          // const nfts = await program.getAll({ count: 3 });
+          const itemsCount = await program.totalSupply();
+
+          const img1 = nfts[0]?.metadata?.image;
+          const img2 = nfts[1]?.metadata?.image;
+          const img3 = nfts[2]?.metadata?.image;
+
+          return {
+            title,
+            id,
+            itemsCount,
+            userName,
+            bigImage,
+            subImage1: img1 ?? subImage1,
+            subImage2: img2 ?? subImage2,
+            subImage3: img3 ?? subImage3,
+            userImage,
+            address,
+            category,
+          };
+        }
+      )
+    );
+    setCollections(formatedCollections);
+  }
+
+  useEffect(() => {
+    getCollections();
+  }, [sdk, address]);
+
+  useEffect(() => {
+    dispatch(collectCollectionData(collections));
+  }, [collections]);
 
   return (
     <>
@@ -143,7 +206,7 @@ const User_items = ({ address }) => {
             </TabPanel>
             <TabPanel>
               {/* <!-- Grid --> */}
-              <Explore_collection_item itemFor={address} />
+              <Explore_collection_item />
             </TabPanel>
             <TabPanel>
               <div>

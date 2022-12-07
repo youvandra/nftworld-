@@ -1,36 +1,88 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { tranding_category_filter } from "../../data/categories_data";
-import Link from "next/link";
 import { HeadLine } from "../../components/component";
 import Feature_collections_data from "../../data/Feature_collections_data";
 import Collection_dropdown from "../../components/dropdown/collection_dropdown";
 import Explore_collection_item from "../../components/collectrions/explore_collection_item";
-import Head from "next/head";
 import Meta from "../../components/Meta";
 import { collectCollectionData } from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";
+import { useSDK } from "@thirdweb-dev/react/solana";
+import axios from "axios";
+import { PublicKey } from "@metaplex-foundation/js";
 
 const Explore_collection = () => {
   const dispatch = useDispatch();
-  const [collectionFilteredData, setCollectionFilteredData] = useState(
-    Feature_collections_data
-  );
+  const [collectionFilteredData, setCollectionFilteredData] = useState([]);
   const [filterVal, setFilterVal] = useState(0);
+  const [data, setdata] = useState([]);
+  const sdk = useSDK();
 
   const handleItemFilter = (text) => {
     if (text === "all") {
-      setCollectionFilteredData(Feature_collections_data);
+      setCollectionFilteredData(data);
     } else {
-      setCollectionFilteredData(
-        Feature_collections_data.filter((item) => item.category === text)
-      );
+      setCollectionFilteredData(data.filter((item) => item.category === text));
     }
   };
 
   useEffect(() => {
-    dispatch(collectCollectionData(collectionFilteredData.slice(0, 8)));
+    setCollectionFilteredData(data);
+  }, [data]);
+
+  useEffect(() => {
+    dispatch(collectCollectionData(collectionFilteredData));
   }, [dispatch, collectionFilteredData]);
+
+  async function getCollections() {
+    if (!sdk) return;
+    const collections = await axios.get("/api/getCollections");
+    if (!collections.data) return;
+
+    const formatedCollections = await Promise.all(
+      collections.data.map(
+        async ({
+          title,
+          address: id,
+          creator: { name: userName, profilePhoto: userImage, address },
+          bigImage,
+          subImage1,
+          subImage2,
+          subImage3,
+          category,
+        }) => {
+          const program = await sdk.getNFTCollection(new PublicKey(id));
+          const nfts = [];
+          // const nfts = await program.getAll({ count: 3 });
+          const itemsCount = await program.totalSupply();
+
+          const img1 = nfts[0]?.metadata?.image;
+          const img2 = nfts[1]?.metadata?.image;
+          const img3 = nfts[2]?.metadata?.image;
+
+          return {
+            title,
+            id,
+            itemsCount,
+            userName,
+            bigImage,
+            subImage1: img1 ?? subImage1,
+            subImage2: img2 ?? subImage2,
+            subImage3: img3 ?? subImage3,
+            userImage,
+            address,
+            category,
+          };
+        }
+      )
+    );
+    setdata(formatedCollections);
+  }
+
+  useEffect(() => {
+    getCollections();
+  }, [sdk]);
 
   return (
     <>

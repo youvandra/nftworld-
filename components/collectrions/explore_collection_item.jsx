@@ -1,74 +1,23 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import Feature_collections_data from "../../data/Feature_collections_data";
-import axios from "axios";
-import { useSDK } from "@thirdweb-dev/react/solana";
-import { PublicKey } from "@metaplex-foundation/js";
+import { useSelector } from "react-redux";
 import Loader from "../Loader";
 
 const Explore_collection_item = ({ itemFor }) => {
-  const [data, setData] = useState(Feature_collections_data);
-  const sdk = useSDK();
+  const { collectiondata } = useSelector((state) => state.counter);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function getCollections() {
-    if (!sdk) return;
-    const collections = await axios.get("/api/getCollections");
-    if (!collections.data) return;
-
-    const filteredCollections = collections.data.filter(({ creatorAddress }) =>
-      itemFor ? itemFor === creatorAddress : true
-    );
-
-    const formatedCollections = await Promise.all(
-      filteredCollections.map(
-        async ({
-          title,
-          address: id,
-          creator: { name: userName, profilePhoto: userImage, address },
-          bigImage,
-          subImage1,
-          subImage2,
-          subImage3,
-        }) => {
-          const program = await sdk.getNFTCollection(new PublicKey(id));
-          const nfts = [];
-          // const nfts = await program.getAll({ count: 3 });
-          const itemsCount = await program.totalSupply();
-
-          const img1 = nfts[0]?.metadata?.image;
-          const img2 = nfts[1]?.metadata?.image;
-          const img3 = nfts[2]?.metadata?.image;
-
-          return {
-            title,
-            id,
-            itemsCount,
-            userName,
-            bigImage,
-            subImage1: img1 ?? subImage1,
-            subImage2: img2 ?? subImage2,
-            subImage3: img3 ?? subImage3,
-            userImage,
-            address,
-          };
-        }
-      )
-    );
-    setData(formatedCollections);
-  }
-
   useEffect(() => {
-    setIsLoading(true);
-    getCollections().finally(() => {
-      setIsLoading(false);
-    });
-  }, [sdk]);
+    console.log({ collectiondata, isTrue: collectiondata === [] });
+    if (collectiondata.length === 0) return setIsLoading(true);
+    setIsLoading(false);
+  }, [collectiondata]);
 
   if (isLoading) return <Loader />;
+
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-      {data.map((item) => {
+      {collectiondata.map((item) => {
         const {
           id,
           bigImage,
@@ -98,19 +47,19 @@ const Explore_collection_item = ({ itemFor }) => {
                     <img
                       src={subImage1}
                       alt="item 1"
-                      className="h-full rounded-[0.625rem] object-cover"
+                      className="aspect-square rounded-[0.625rem] object-cover"
                       loading="lazy"
                     />
                     <img
                       src={subImage2}
                       alt="item 1"
-                      className="h-full rounded-[0.625rem] object-cover"
+                      className="aspect-square rounded-[0.625rem] object-cover"
                       loading="lazy"
                     />
                     <img
                       src={subImage3}
                       alt="item 1"
-                      className="h-full rounded-[0.625rem] object-cover"
+                      className="aspect-square rounded-[0.625rem] object-cover"
                       loading="lazy"
                     />
                   </span>

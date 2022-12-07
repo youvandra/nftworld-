@@ -67,7 +67,7 @@ const Collection = () => {
           <img
             src={banner ?? "/images/collections/collection_banner.jpg"}
             alt="banner"
-            className="object-cover"
+            className="object-cover w-full h-full object-center"
           />
         </div>
         {/* <!-- end banner --> */}

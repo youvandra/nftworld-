@@ -29,11 +29,6 @@ const tranding_category_filter = [
     svg: "photography",
     text: "photography",
   },
-  {
-    id: 6,
-    svg: "world",
-    text: "virtual world",
-  },
 ];
 
 const trendingCategoryData = [
