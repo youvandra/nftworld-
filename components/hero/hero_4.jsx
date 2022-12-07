@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 const Hero_4 = () => {
+  const router = useRouter();
   return (
     <>
       {/* <!-- Hero --> */}
@@ -20,7 +22,16 @@ const Hero_4 = () => {
               <span className="animate-gradient"> Creative NFTs</span>
             </h1>
             {/* <!-- Search --> */}
-            <form action="search" className="relative mb-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                router.push({
+                  query: { search: e.target[0].value },
+                  pathname: "/search",
+                });
+              }}
+              className="relative mb-4"
+            >
               <input
                 type="search"
                 className="w-full rounded-2xl border border-jacarta-100 py-4 px-4 pl-10 text-md text-jacarta-700 placeholder-jacarta-300 focus:ring-accent dark:border-transparent dark:bg-white/[.15] dark:text-white dark:placeholder-white"

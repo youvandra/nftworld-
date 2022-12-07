@@ -242,8 +242,18 @@ const MblNavbar = ({ theme }) => {
         </div>
 
         {/* <!-- Mobile Search --> */}
-        <form action="search" className="relative mt-24 mb-8 w-full lg:hidden">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            router.push({
+              query: { search: e.target[0].value },
+              pathname: "/search",
+            });
+          }}
+          className="relative mt-24 mb-8 w-full lg:hidden"
+        >
           <input
+            name="search"
             type="search"
             className="text-jacarta-700 placeholder-jacarta-500 focus:ring-accent border-jacarta-100 w-full rounded-2xl border py-3 px-4 pl-10 dark:border-transparent dark:bg-white/[.15] dark:text-white dark:placeholder-white"
             placeholder="Search"

@@ -125,7 +125,13 @@ const Navbar = () => {
 
               {/* <!-- Search --> */}
               <form
-                action="search"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  router.push({
+                    query: { search: e.target[0].value },
+                    pathname: "/search",
+                  });
+                }}
                 className="relative ml-12 mr-8 hidden basis-3/12 lg:block xl:ml-[8%]"
               >
                 <input
@@ -329,7 +335,13 @@ const Navbar = () => {
                 </form>
               ) : (
                 <form
-                  action="search"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    router.push({
+                      query: { search: e.target[0].value },
+                      pathname: "/search",
+                    });
+                  }}
                   className="relative ml-12 mr-8 hidden basis-3/12 lg:block xl:ml-[8%]"
                 >
                   <input

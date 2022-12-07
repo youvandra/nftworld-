@@ -11,9 +11,7 @@ export default function List() {
 
   const getMyNFTs = async () => {
     const nfts = await getNFTsByOwner(publicKey.toBase58());
-    const formatedNFTs = nfts.map((n) => n);
-    setNfts(formatedNFTs);
-    console.log(formatedNFTs);
+    setNfts(nfts);
   };
 
   useEffect(() => {

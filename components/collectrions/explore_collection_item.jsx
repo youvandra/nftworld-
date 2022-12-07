@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Loader from "../Loader";
 
-const Explore_collection_item = ({ itemFor }) => {
+const Explore_collection_item = () => {
   const { collectiondata } = useSelector((state) => state.counter);
   const [isLoading, setIsLoading] = useState(false);
 
