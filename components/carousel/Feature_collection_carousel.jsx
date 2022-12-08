@@ -23,7 +23,7 @@ const Feature_collections_carousel = () => {
     if (!collections.data) return;
     const formatedCollections = await Promise.all(
       collections.data
-        .filter(({ tending }) => tending)
+        .filter(({ isFeatured }) => isFeatured)
         .map(
           async ({
             title,

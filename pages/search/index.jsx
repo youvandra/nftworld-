@@ -20,7 +20,14 @@ export default function index() {
   const getSearchResult = async (s) => {
     const { data } = await axios.get(`/api/search?search=${s}`);
     if (!data?.users || !data?.collections) return;
-    setCollections(data.collections);
+    const formatedCollections = data.collections.map(
+      ({ creator, ...rest }) => ({
+        userName: creator?.name,
+        userImage: creator?.profilePhoto,
+        ...rest,
+      })
+    );
+    setCollections(formatedCollections);
     setUsers(data.users);
   };
 

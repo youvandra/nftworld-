@@ -39,7 +39,7 @@ model Collection {
   itemsCount  String @default("0")
   category category @default(art)
   top Boolean @default(false)
-  tending Boolean @default(false)
+  trending Boolean @default(false)
   recent Boolean @default(true)
   bigImage String
 	subImage2 String @default("/placeholder.jpg")
@@ -47,6 +47,8 @@ model Collection {
 	subImage3 String @default("/placeholder.jpg")
 	postTime String
 	postDate String @default("Last 24 Hours")//Last 24 Hours or Last 7 days or Last 30 days
+  isFeatured Boolean @default(false)
+  featureRequested Boolean @default(false)
 }
 
 model FeaturedNFT {

@@ -954,7 +954,7 @@ const MblNavbar = ({ theme }) => {
                   </a>
                 </Link>
                 {/* add collection */}
-                <Link href={`/bid`}>
+                <Link href={`/feature-request`}>
                   <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -966,7 +966,7 @@ const MblNavbar = ({ theme }) => {
                       <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
                     </svg>
                     <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
-                      Bid NFT
+                      Request feature
                     </span>
                   </a>
                 </Link>
@@ -980,7 +980,7 @@ const MblNavbar = ({ theme }) => {
                       height="24"
                       className="fill-jacarta-700 h-4 w-4 transition-colors dark:fill-white"
                     >
-                      <path d="M14 9l-2.519 4-2.481-1.96-5 6.96h16l-6-9zm8-5v16h-20v-16h20zm2-2h-24v20h24v-20zm-20 6c0-1.104.896-2 2-2s2 .896 2 2c0 1.105-.896 2-2 2s-2-.895-2-2z" />
+                      <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
                     </svg>
                     <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
                       List NFT

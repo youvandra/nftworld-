@@ -12,6 +12,8 @@ import { ThirdwebProvider } from "@thirdweb-dev/react/solana";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ConnectionProvider } from "@solana/wallet-adapter-react";
 import MetaplexProvider from "../metaplex/MetaPlexProvider";
+import { Toaster } from "react-hot-toast";
+
 require("@solana/wallet-adapter-react-ui/styles.css");
 // Change the network to the one you want to use: "mainnet-beta", "testnet", "devnet", "localhost" or your own RPC endpoint
 const desiredNetwork = "devnet";
@@ -35,7 +37,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Meta title="NFT WORLD" />
-
+      <Toaster />
       <Provider store={store}>
         <ThirdwebProvider
           autoConnect={true}
