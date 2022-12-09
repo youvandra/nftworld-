@@ -172,15 +172,16 @@ const User_items = ({ address }) => {
                       (
                         {
                           creators,
-                          metadata: { image, name },
+                          metadata: { image },
                           listing,
                           address,
+                          name,
                         },
                         i
                       ) => (
                         <ListingItem
                           key={i}
-                          creatorAddress={creators[0]?.address?.toBase58()}
+                          sellerAddress={listing?.sellerAddress?.toBase58()}
                           listing={listing}
                           image={image}
                           name={name}

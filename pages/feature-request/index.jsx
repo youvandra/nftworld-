@@ -15,11 +15,15 @@ export default function index() {
 
   const featureCollection = async (address) => {
     if (!address) return;
-    await toast.promise(axios.get(`/api/requestFeature?address=${address}`), {
-      error: "There was a problem sending you feature request",
-      loading: "Sending your request",
-      success: "Your request has been sent successfullly",
-    });
+    await toast.promise(
+      axios.get(`/api/requestFeature?address=${address}`),
+      {
+        error: "There was a problem sending you feature request",
+        loading: "Sending your request",
+        success: "Your request has been sent successfullly",
+      },
+      { position: "bottom-right" }
+    );
   };
 
   function handleCategory(col) {

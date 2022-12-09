@@ -43,7 +43,7 @@ const Item = () => {
     const listing = await metaplex
       .auctionHouse()
       .findListings({ auctionHouse, metadata: nft.metadataAddress });
-    if (!listing && listing.length === 0) return;
+    if (!listing || listing.length === 0) return;
     const prices = listing.map(
       ({ price }) => price.basisPoints.toNumber() / LAMPORTS_PER_SOL
     );

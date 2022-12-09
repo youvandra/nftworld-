@@ -7,6 +7,7 @@ import Collection_items from "../../components/collectrions/Collection_items";
 import Link from "next/link";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useStats } from "../../metaplex/useStats";
 
 const Collection = () => {
   const [likesImage, setLikesImage] = useState(false);
@@ -28,12 +29,7 @@ const Collection = () => {
       `/api/getCollectionByAddress?address=${address}`
     );
     if (!data) return;
-    const formatedDetails = [
-      { detailsNumber: data.owners, detailsText: "Owners" },
-      { detailsNumber: data.floorPrice, detailsText: "Floor Rrice" },
-      { detailsNumber: data.volumeTraded, detailsText: "Volume Traded" },
-    ];
-    setdetails(formatedDetails);
+
     const fromatedCollection = {
       title: data.title,
       image: data.image,
@@ -41,7 +37,6 @@ const Collection = () => {
       creator: data.creator.name,
       creatorAddress: data.creatorAddress,
       text: data.bio,
-      details: formatedDetails,
       banner: data.banner,
     };
     setCollection(fromatedCollection);
@@ -58,6 +53,16 @@ const Collection = () => {
       setLikesImage(false);
     }
   };
+
+  const { floorPrice, owners, volumeTraded } = useStats(address);
+  useEffect(() => {
+    const formatedDetails = [
+      { detailsNumber: owners, detailsText: "Owners" },
+      { detailsNumber: floorPrice, detailsText: "Floor Rrice" },
+      { detailsNumber: volumeTraded, detailsText: "Volume Traded" },
+    ];
+    setdetails(formatedDetails);
+  }, [floorPrice, owners, volumeTraded]);
 
   return (
     <>
@@ -127,7 +132,7 @@ const Collection = () => {
                         Items
                       </div>
                     </a>
-                  </Link>{" "}
+                  </Link>
                   {details.map(({ detailsNumber, detailsText }, id) => {
                     return (
                       <Link href="#" key={id}>

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { bidsModalShow } from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";
 import "tippy.js/themes/light.css";
-import Image from "next/image";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import axios from "axios";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
@@ -29,22 +28,19 @@ const Auctions_categories = () => {
   const getNFTListings = async () => {
     getListings().then(async (listings) => {
       console.log(listings);
+      const filteredListings = listings.filter(
+        ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
+      );
       const formatedLisings = await Promise.all(
-        listings.map(
-          async ({
-            address,
-            metadata: { image: bigImage },
-            name: title,
-            listing: { price },
-            creators,
-          }) => {
+        filteredListings.map(
+          async ({ address, asset, price, sellerAddress }) => {
             const { data: user } = await axios.get(
-              `/api/getUserByAddress?address=${creators[0].address.toBase58()}`
+              `/api/getUserByAddress?address=${sellerAddress?.toBase58()}`
             );
             return {
               id: address?.toBase58(),
-              bigImage,
-              title,
+              bigImage: asset.metadata?.metadata?.image,
+              title: asset.metadata?.name,
               price,
               creatorName: user?.name ?? "unkown user",
               creatorImage: user?.profilePhoto,
@@ -118,15 +114,11 @@ const Auctions_categories = () => {
                     <figure className="relative">
                       <Link href={itemLink}>
                         <a>
-                          <Image
+                          <img
                             src={bigImage}
                             alt="item 8"
-                            className="w-full rounded-[0.625rem]"
+                            className="w-full h-full aspect-[4/3] rounded-[0.625rem] object-cover"
                             loading="lazy"
-                            height="100%"
-                            width="100%"
-                            layout="responsive"
-                            objectFit="cover"
                           />
                         </a>
                       </Link>

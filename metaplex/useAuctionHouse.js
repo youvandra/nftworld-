@@ -1,7 +1,6 @@
 import { PublicKey, sol } from "@metaplex-foundation/js";
 import { useMetaplex } from "./useMetaplex";
 import { AUCTION_HOUSE_ADDRESS } from "../utils/consts";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { returnNFTwithMetadata } from "../utils/returnNFTwithMetadata";
 
 export function useAuctionHouse() {
@@ -17,22 +16,26 @@ export function useAuctionHouse() {
     args = { seller: undefined, metadata: undefined, mint: undefined }
   ) {
     const auctionHouse = await getAuctionHouse();
-    const rawListings = await metaplex
+
+    const lazyListings = await metaplex
       .auctionHouse()
       .findListings({ auctionHouse, ...args });
 
-    const listing = await Promise.all(
-      rawListings.map(async (l) => {
-        const rawNFTS = await metaplex
-          .nfts()
-          .findByMetadata({ metadata: l.metadataAddress });
-        const nfts = await returnNFTwithMetadata(rawNFTS);
-        return { ...nfts, listing: l };
+    const loadedListings = await Promise.all(
+      lazyListings.map(
+        async (lazyListing) =>
+          await metaplex.auctionHouse().loadListing({ lazyListing })
+      )
+    );
+
+    const formatedListings = await Promise.all(
+      loadedListings.map(async (listing) => {
+        const metadata = await returnNFTwithMetadata(listing.asset);
+        return { ...listing, asset: { ...listing.asset, metadata } };
       })
     );
 
-    // console.log(listing);
-    return listing;
+    return formatedListings;
   }
 
   async function getBids(
@@ -65,7 +68,7 @@ export function useAuctionHouse() {
 
     return await metaplex.auctionHouse().cancelBid({ auctionHouse, bid });
   }
-  async function cancelListing(bid) {
+  async function cancelListing(listing) {
     const auctionHouse = await getAuctionHouse();
 
     return await metaplex

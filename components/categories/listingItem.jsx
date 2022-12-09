@@ -1,3 +1,4 @@
+import { useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import Tippy from "@tippyjs/react";
 import axios from "axios";
@@ -7,18 +8,19 @@ import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import { useMetaplex } from "../../metaplex/useMetaplex";
 
 export default function ListingItem({
-  creatorAddress,
+  sellerAddress,
   listing,
   image,
   name,
   address,
 }) {
   const [creator, setCreator] = useState();
+  const { publicKey } = useWallet();
 
   async function getUser() {
-    if (!creatorAddress) return;
+    if (!sellerAddress) return;
     const { data } = await axios.get(
-      `/api/getUserByAddress?address=${creatorAddress}`
+      `/api/getUserByAddress?address=${sellerAddress}`
     );
     if (data) {
       const formatedUser = {
@@ -31,10 +33,11 @@ export default function ListingItem({
 
   useEffect(() => {
     getUser();
-  }, [creatorAddress]);
+  }, [sellerAddress]);
 
   const { metaplex } = useMetaplex();
   const { getAuctionHouse } = useAuctionHouse();
+
   async function buy() {
     const auctionHouse = await getAuctionHouse();
 
@@ -43,7 +46,18 @@ export default function ListingItem({
       .loadListing({ lazyListing: listing });
     console.log(l);
 
-    // await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
+    await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
+  }
+
+  async function cancel() {
+    const auctionHouse = await getAuctionHouse();
+
+    const l = await metaplex
+      .auctionHouse()
+      .loadListing({ lazyListing: listing });
+    console.log(l);
+
+    await metaplex.auctionHouse().cancelListing({ auctionHouse, listing: l });
   }
 
   return (
@@ -59,7 +73,7 @@ export default function ListingItem({
                 </span>
               }
             >
-              <Link href={`/user/${creatorAddress ?? "#"}`}>
+              <Link href={`/user/${sellerAddress ?? "#"}`}>
                 <a>
                   <img
                     src={creator?.image ?? ""}
@@ -79,14 +93,14 @@ export default function ListingItem({
               <img
                 src={image}
                 alt="item 8"
-                className="w-full h-full object-cover rounded-[0.625rem]"
+                className="w-full h-full object-cover aspect-[4/3] rounded-[0.625rem]"
                 loading="lazy"
               />
             </a>
           </Link>
         </figure>
         <div className="mt-7 flex items-center justify-between">
-          <Link href={`/user/${creatorAddress}`}>
+          <Link href={`/item/${address}`}>
             <a>
               <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
                 {name}
@@ -114,14 +128,25 @@ export default function ListingItem({
         </div>
 
         <div className="mt-8 flex items-center justify-between">
-          <button
-            onClick={() => {
-              buy();
-            }}
-            className="text-accent font-display text-sm font-semibold"
-          >
-            Buy
-          </button>
+          {address === publicKey?.toBase58() ? (
+            <button
+              onClick={() => {
+                cancel();
+              }}
+              className="text-accent font-display text-sm font-semibold"
+            >
+              Cancel
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                buy();
+              }}
+              className="text-accent font-display text-sm font-semibold"
+            >
+              Buy
+            </button>
+          )}
           <Link href={`/item/${address}`}>
             <a className="group flex items-center">
               <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
