@@ -1,13 +1,32 @@
 import React, { useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import OfferTab from "./OfferTab";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import Properties from "./Properties";
 import Activity_tab from "./Activity_tab";
 import Price_history from "./Price_history";
 import "react-tabs/style/react-tabs.css";
+import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import { useEffect } from "react";
+import Loader from "../Loader";
+
+function isWithinLast6Monthes(date) {
+  const now = new Date();
+  const yearAgo = new Date(now.getFullYear(), now.getMonth() - 6);
+  return date >= yearAgo;
+}
+
+function getMonthName(dateString) {
+  const date = new Date(dateString + "-01"); // create a Date instance from the date string
+  const options = { month: "long" }; // specify that we want the month name
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+}
 
 const ItemsTabs = ({ nft }) => {
   const [tabsActive, setTabsActive] = useState(2);
+
+  const { getListings } = useAuctionHouse();
+
+  const [priceHistory, setPriceHistory] = useState();
 
   const tabsHeadText = [
     {
@@ -31,6 +50,42 @@ const ItemsTabs = ({ nft }) => {
       icon: "price",
     },
   ];
+
+  const getPriceHostory = async () => {
+    if (!nft) return;
+    const allListing = await getListings({
+      metadata: nft?.metadataAddress,
+    });
+
+    const purchases = allListing.filter(
+      ({ purchaseReceiptAddress, createdAt }) =>
+        purchaseReceiptAddress &&
+        isWithinLast6Monthes(new Date(createdAt * 1000))
+    );
+
+    const stats = purchases.map(({ price, createdAt }) => ({
+      price: price.basisPoints.toNumber() / LAMPORTS_PER_SOL,
+      createdAt: new Date(createdAt.toNumber() * 1000),
+    }));
+
+    const result = stats.reduce((acc, { price, createdAt }) => {
+      const month = createdAt.toISOString().slice(0, 7); // get the month and year from the date
+      const monthName = getMonthName(month); // get the month name
+      acc[monthName] = acc[monthName] || { avgPrice: 0, numSales: 0 };
+      acc[monthName].avgPrice += price;
+      acc[monthName].numSales += 1;
+      return acc;
+    }, {});
+
+    console.log(result);
+    return result;
+  };
+
+  useEffect(() => {
+    getPriceHostory().then((ph) => {
+      setPriceHistory(ph);
+    });
+  }, [nft]);
 
   return (
     <>
@@ -109,7 +164,14 @@ const ItemsTabs = ({ nft }) => {
             <Activity_tab address={nft?.address?.toBase58()} />
           </TabPanel>
           <TabPanel>
-            <Price_history classes="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-t-2lg rounded-b-2lg rounded-tl-none border bg-white p-6" />
+            {priceHistory ? (
+              <Price_history
+                priceHistory={priceHistory}
+                classes="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-t-2lg rounded-b-2lg rounded-tl-none border bg-white p-6"
+              />
+            ) : (
+              <Loader />
+            )}
           </TabPanel>
         </Tabs>
       </div>
