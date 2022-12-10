@@ -11,6 +11,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useSDK } from "@thirdweb-dev/react/solana";
 import { PublicKey } from "@metaplex-foundation/js";
+import { useStats } from "../../metaplex/useStats";
 
 const Feature_collections_carousel = () => {
   const [data, setData] = useState(Feature_collections_data);
@@ -60,6 +61,15 @@ const Feature_collections_carousel = () => {
     );
     setData(formatedCollections);
   }
+  const [stats, setStats] = useState();
+
+  const { getAllCollectionsStats } = useStats();
+
+  useEffect(() => {
+    getAllCollectionsStats().then((s) => {
+      setStats(s);
+    });
+  }, []);
 
   useEffect(() => {
     getCollections();
@@ -153,6 +163,23 @@ const Feature_collections_carousel = () => {
                   </Link>
 
                   <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
+                    <span className="dark:text-jacarta-300 text-sm flex gap-2">
+                      Floor: {stats?.fp[itemLink] ?? 0}
+                      <img
+                        className="h-6 w-4"
+                        src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                      />
+                    </span>
+                    <span className="dark:text-jacarta-300 text-sm flex gap-2">
+                      Volume: {stats?.vt[itemLink] ?? 0}
+                      <img
+                        className="h-6 w-4"
+                        src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                      />
+                    </span>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between text-sm font-medium tracking-tight">
                     <div className="flex flex-wrap items-center">
                       <Link href={`/collection/${itemLink}`}>
                         <a className="mr-2 shrink-0">

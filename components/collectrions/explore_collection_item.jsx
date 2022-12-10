@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useStats } from "../../metaplex/useStats";
 import Loader from "../Loader";
 
 const Explore_collection_item = () => {
@@ -11,6 +12,16 @@ const Explore_collection_item = () => {
     if (collectiondata.length === 0) return setIsLoading(true);
     setIsLoading(false);
   }, [collectiondata]);
+
+  const [stats, setStats] = useState();
+
+  const { getAllCollectionsStats } = useStats();
+
+  useEffect(() => {
+    getAllCollectionsStats().then((s) => {
+      setStats(s);
+    });
+  }, []);
 
   if (isLoading) return <Loader />;
 
@@ -70,8 +81,23 @@ const Explore_collection_item = () => {
                   {title}
                 </a>
               </Link>
-
               <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
+                <span className="dark:text-jacarta-300 text-sm flex gap-2">
+                  Floor: {stats?.fp[id] ?? 0}
+                  <img
+                    className="h-6 w-4"
+                    src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                  />
+                </span>
+                <span className="dark:text-jacarta-300 text-sm flex gap-2">
+                  Volume: {stats?.vt[id] ?? 0}
+                  <img
+                    className="h-6 w-4"
+                    src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                  />
+                </span>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-sm font-medium tracking-tight">
                 <div className="flex flex-wrap items-center">
                   <Link href={`/user/${address}`}>
                     <a className="mr-2 shrink-0">

@@ -168,8 +168,8 @@ const Activity_item = ({ listings = [], bids = [] }) => {
         <div className="lg:flex">
           {/* <!-- Records --> */}
           <div className="mb-10 shrink-0 basis-8/12 space-y-5 lg:mb-0 lg:pr-10">
-            {data.map((item) => {
-              const { id, image, title, price, time, category, address } = item;
+            {data.map((item, id) => {
+              const { image, title, price, time, category, address } = item;
 
               return (
                 <Link href={`/item/${address}`} key={id}>

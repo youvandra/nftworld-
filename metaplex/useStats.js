@@ -24,12 +24,15 @@ export const useStats = (address) => {
     setCollectionLisings(cl);
   };
 
-  const getCollectionFloorPrice = async () => {
-    if (!address) return;
-    if (!collectionLisings || collectionLisings.length === 0) return "N/A";
+  const getCollectionFloorPrice = async (
+    a = address,
+    listings = collectionLisings
+  ) => {
+    if (!a) return;
+    if (!listings || listings.length === 0) return "N/A";
 
     //filter Available listings
-    const availableListings = collectionLisings.filter(
+    const availableListings = listings.filter(
       ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
     );
 
@@ -55,13 +58,12 @@ export const useStats = (address) => {
     return uniqueOwners.size;
   };
 
-  const getVolumeTraded = async () => {
-    if (!collectionLisings || collectionLisings.length === 0 || !address)
-      return "N/A";
+  const getVolumeTraded = async (a = address, listings = collectionLisings) => {
+    if (!listings || listings.length === 0 || !a) return "N/A";
 
     //filter completed purchases
 
-    const purchases = collectionLisings.filter(
+    const purchases = listings.filter(
       ({ purchaseReceiptAddress }) => purchaseReceiptAddress
     );
 
@@ -91,5 +93,42 @@ export const useStats = (address) => {
     getCollectionListings();
   }, [address]);
 
-  return { floorPrice, owners, volumeTraded, collectionLisings };
+  async function getAllCollectionsStats() {
+    const l = await getListings();
+
+    const listingsByCollection = l
+      .filter(({ asset }) => asset.collection)
+      .reduce((acc, nft) => {
+        // If the current address doesn't exist in the accumulator, create a new key-value pair
+        if (!acc[nft.asset.collection.address]) {
+          acc[nft.asset.collection.address] = [nft];
+        } else {
+          // If the current address does exist in the accumulator, add the current NFT object to the array of NFTs for that address
+          acc[nft.asset.collection.address].push(nft);
+        }
+
+        // Return the accumulator
+        return acc;
+      }, {});
+
+    const vt = {};
+    for (const col in listingsByCollection) {
+      vt[col] = await getVolumeTraded(true, listingsByCollection[col]);
+    }
+    const fp = {};
+    for (const col in listingsByCollection) {
+      fp[col] = await getCollectionFloorPrice(true, listingsByCollection[col]);
+    }
+    return { fp, vt };
+  }
+
+  return {
+    floorPrice,
+    owners,
+    volumeTraded,
+    collectionLisings,
+    getVolumeTraded,
+    getCollectionFloorPrice,
+    getAllCollectionsStats,
+  };
 };

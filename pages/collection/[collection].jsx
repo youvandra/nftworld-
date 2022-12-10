@@ -67,10 +67,18 @@ const Collection = () => {
 
   const details = [
     {
+      detailsNumber: collectionLisings.filter(
+        ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
+      ).length,
+      detailsText: "Listed",
+    },
+    {
       detailsNumber: sortedtrendingCategoryItemData?.length,
       detailsText: "Items",
     },
     { detailsNumber: owners, detailsText: "Owners" },
+  ];
+  const sols = [
     { detailsNumber: floorPrice, detailsText: "Floor Rrice" },
     { detailsNumber: volumeTraded, detailsText: "Volume Traded" },
   ];
@@ -139,6 +147,24 @@ const Collection = () => {
                       <Link href="#" key={id}>
                         <a className="dark:border-jacarta-600 border-jacarta-100 w-1/2 rounded-l-xl border-r py-4 hover:shadow-md sm:w-32">
                           <div className="text-jacarta-700 mb-1 text-base font-bold dark:text-white">
+                            {detailsNumber}
+                          </div>
+                          <div className="text-2xs dark:text-jacarta-400 font-medium tracking-tight">
+                            {detailsText}
+                          </div>
+                        </a>
+                      </Link>
+                    );
+                  })}
+                  {sols.map(({ detailsNumber, detailsText }, id) => {
+                    return (
+                      <Link href="#" key={id}>
+                        <a className="dark:border-jacarta-600 border-jacarta-100 w-1/2 rounded-l-xl border-r py-4 hover:shadow-md sm:w-32">
+                          <div className="text-jacarta-700 flex items-center justify-center gap-2 mb-1 text-base font-bold dark:text-white">
+                            <img
+                              className="h-4 w-4"
+                              src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                            />
                             {detailsNumber}
                           </div>
                           <div className="text-2xs dark:text-jacarta-400 font-medium tracking-tight">

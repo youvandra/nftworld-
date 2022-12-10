@@ -44,7 +44,6 @@ export default function ListingItem({
     const l = await metaplex
       .auctionHouse()
       .loadListing({ lazyListing: listing });
-    console.log(l);
 
     await metaplex.auctionHouse().buy({ auctionHouse, listing: l });
   }
@@ -55,7 +54,6 @@ export default function ListingItem({
     const l = await metaplex
       .auctionHouse()
       .loadListing({ lazyListing: listing });
-    console.log(l);
 
     await metaplex.auctionHouse().cancelListing({ auctionHouse, listing: l });
   }

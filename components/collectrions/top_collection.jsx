@@ -6,11 +6,14 @@ import HeadLine from "../headLine";
 import axios from "axios";
 import { useSDK } from "@thirdweb-dev/react/solana";
 import { PublicKey } from "@metaplex-foundation/js";
+import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import { useStats } from "../../metaplex/useStats";
+import Loader from "../Loader";
 
 const Top_collection = () => {
   const [timeActiveText, setTimeActiveText] = useState("last 7 days");
-  const [data, setData] = useState(collection_data);
-  const [allData, setAllData] = useState(collection_data);
+  const [data, setData] = useState([]);
+  const [allData, setAllData] = useState([]);
   const [dropdownShow, setDropdownShow] = useState(false);
   const timeText = [
     {
@@ -26,6 +29,44 @@ const Top_collection = () => {
       text: "Last 30 days",
     },
   ];
+
+  const { getListings } = useAuctionHouse();
+
+  const { getVolumeTraded, getCollectionFloorPrice } = useStats();
+  const [stats, setStats] = useState();
+
+  async function getStats() {
+    const l = await getListings();
+
+    const listingsByCollection = l
+      .filter(({ asset }) => asset.collection)
+      .reduce((acc, nft) => {
+        // If the current address doesn't exist in the accumulator, create a new key-value pair
+        if (!acc[nft.asset.collection.address]) {
+          acc[nft.asset.collection.address] = [nft];
+        } else {
+          // If the current address does exist in the accumulator, add the current NFT object to the array of NFTs for that address
+          acc[nft.asset.collection.address].push(nft);
+        }
+
+        // Return the accumulator
+        return acc;
+      }, {});
+
+    const vt = {};
+    for (const col in listingsByCollection) {
+      vt[col] = await getVolumeTraded(true, listingsByCollection[col]);
+    }
+    const fp = {};
+    for (const col in listingsByCollection) {
+      fp[col] = await getCollectionFloorPrice(true, listingsByCollection[col]);
+    }
+    setStats({ fp, vt });
+  }
+
+  useEffect(() => {
+    getStats();
+  }, []);
 
   const sdk = useSDK();
 
@@ -65,9 +106,13 @@ const Top_collection = () => {
     setData(formatedCollections);
     setAllData(formatedCollections);
   }
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getCollections();
+    setIsLoading(true);
+    getCollections().finally(() => {
+      setIsLoading(false);
+    });
   }, [sdk]);
 
   const handleFilter = (text) => {
@@ -94,6 +139,8 @@ const Top_collection = () => {
       }
     });
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <div>
@@ -211,13 +258,19 @@ const Top_collection = () => {
                     <div>
                       <Link href={"/collection/" + itemLink}>
                         <a className="block">
-                          <span className="font-display text-jacarta-700 hover:text-accent font-semibold dark:text-white">
-                            {title}
+                          <span className="font-display whitespace-nowrap text-jacarta-700 hover:text-accent font-semibold dark:text-white">
+                            {title?.length > 17
+                              ? title.substring(0, 17) + ".."
+                              : title}
                           </span>
                         </a>
                       </Link>
-                      <span className="dark:text-jacarta-300 text-sm">
-                        {amount} SOL
+                      <span className="dark:text-jacarta-300 text-sm flex gap-2">
+                        {stats?.vt[itemLink] ?? 0}{" "}
+                        <img
+                          className="h-6 w-4"
+                          src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023"
+                        />
                       </span>
                     </div>
                   </div>
