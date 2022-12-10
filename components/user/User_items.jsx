@@ -46,8 +46,9 @@ const User_items = ({ address }) => {
   ];
   const dispatch = useDispatch();
 
-  const { getListings } = useAuctionHouse();
-  const [userListings, setUserListings] = useState();
+  const { getListings, getBids } = useAuctionHouse();
+  const [userListings, setUserListings] = useState([]);
+  const [userBids, setuserBids] = useState([]);
   const [collections, setCollections] = useState([]);
 
   const sdk = useSDK();
@@ -57,8 +58,15 @@ const User_items = ({ address }) => {
     setUserListings(listing);
   }
 
+  async function getUserBids() {
+    if (!address) return;
+    const bids = await getBids({ buyer: new PublicKey(address) });
+    setuserBids(bids);
+  }
+
   useEffect(() => {
     getUserListings();
+    getUserBids();
   }, [address]);
 
   async function getCollections() {
@@ -204,7 +212,7 @@ const User_items = ({ address }) => {
             </TabPanel>
             <TabPanel>
               <div>
-                <Activity_item />
+                <Activity_item bids={userBids} listings={userListings} />
               </div>
             </TabPanel>
           </Tabs>

@@ -41,7 +41,7 @@ export function useAuctionHouse() {
   }
 
   async function getBids(
-    args = { seller: undefined, metadata: undefined, mint: undefined }
+    args = { buyer: undefined, metadata: undefined, mint: undefined }
   ) {
     const auctionHouse = await getAuctionHouse();
 
