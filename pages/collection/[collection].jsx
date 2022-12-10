@@ -8,6 +8,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useStats } from "../../metaplex/useStats";
+import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 
 const Collection = () => {
   const [likesImage, setLikesImage] = useState(false);
@@ -17,12 +18,12 @@ const Collection = () => {
     { title, image, icon, creator, text, creatorAddress, banner },
     setCollection,
   ] = useState(collection_item_data[0]);
+  const [collectionBids, setCollectionBids] = useState([]);
+  const { getBids } = useAuctionHouse();
 
   const { sortedtrendingCategoryItemData } = useSelector(
     (state) => state.counter
   );
-
-  const [details, setdetails] = useState([]);
 
   async function getCollection() {
     const { data } = await axios.get(
@@ -44,6 +45,13 @@ const Collection = () => {
 
   useEffect(() => {
     getCollection();
+    getBids().then((bids) => {
+      const filteredBids = bids.filter(
+        ({ asset }) => asset.collection.address.toBase58() === address
+      );
+
+      setCollectionBids(filteredBids);
+    });
   }, [address]);
 
   const handleLikes = () => {
@@ -54,15 +62,18 @@ const Collection = () => {
     }
   };
 
-  const { floorPrice, owners, volumeTraded } = useStats(address);
-  useEffect(() => {
-    const formatedDetails = [
-      { detailsNumber: owners, detailsText: "Owners" },
-      { detailsNumber: floorPrice, detailsText: "Floor Rrice" },
-      { detailsNumber: volumeTraded, detailsText: "Volume Traded" },
-    ];
-    setdetails(formatedDetails);
-  }, [floorPrice, owners, volumeTraded]);
+  const { floorPrice, owners, volumeTraded, collectionLisings } =
+    useStats(address);
+
+  const details = [
+    {
+      detailsNumber: sortedtrendingCategoryItemData?.length,
+      detailsText: "Items",
+    },
+    { detailsNumber: owners, detailsText: "Owners" },
+    { detailsNumber: floorPrice, detailsText: "Floor Rrice" },
+    { detailsNumber: volumeTraded, detailsText: "Volume Traded" },
+  ];
 
   return (
     <>
@@ -123,16 +134,6 @@ const Collection = () => {
                 </div>
 
                 <div className="dark:bg-jacarta-800 dark:border-jacarta-600 border-jacarta-100 mb-8 inline-flex flex-wrap items-center justify-center rounded-xl border bg-white">
-                  <Link href="#">
-                    <a className="dark:border-jacarta-600 border-jacarta-100 w-1/2 rounded-l-xl border-r py-4 hover:shadow-md sm:w-32">
-                      <div className="text-jacarta-700 mb-1 text-base font-bold dark:text-white">
-                        {sortedtrendingCategoryItemData?.length}
-                      </div>
-                      <div className="text-2xs dark:text-jacarta-400 font-medium tracking-tight">
-                        Items
-                      </div>
-                    </a>
-                  </Link>
                   {details.map(({ detailsNumber, detailsText }, id) => {
                     return (
                       <Link href="#" key={id}>
@@ -185,7 +186,10 @@ const Collection = () => {
 
         {/* <!-- end profile --> */}
       </div>
-      <Collection_items />
+      <Collection_items
+        collectionLisings={collectionLisings}
+        collectionBids={collectionBids}
+      />
     </>
   );
 };

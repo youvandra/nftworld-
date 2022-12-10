@@ -168,27 +168,20 @@ const User_items = ({ address }) => {
                 <div>
                   {/* <!-- Filter --> */}
                   <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-                    {userListings.map(
-                      (
-                        {
-                          creators,
-                          metadata: { image },
-                          listing,
-                          address,
-                          name,
-                        },
-                        i
-                      ) => (
+                    {userListings.map((listing, i) => {
+                      const { asset, sellerAddress } = listing;
+
+                      return (
                         <ListingItem
                           key={i}
-                          sellerAddress={listing?.sellerAddress?.toBase58()}
+                          sellerAddress={sellerAddress?.toBase58()}
                           listing={listing}
-                          image={image}
-                          name={name}
-                          address={address?.toBase58()}
+                          image={asset.metadata.metadata.image}
+                          name={asset.metadata.name}
+                          address={asset?.address?.toBase58()}
                         />
-                      )
-                    )}
+                      );
+                    })}
                   </div>
                 </div>
               )}

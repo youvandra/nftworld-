@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Activity_item from "../../components/collectrions/Activity_item";
-import Head from "next/head";
 import Meta from "../../components/Meta";
+import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 
 const index = () => {
+  const { getBids, getListings } = useAuctionHouse();
+  const [bids, setBids] = useState([]);
+  const [listings, setListings] = useState([]);
+
+  useEffect(() => {
+    getBids().then((b) => {
+      setBids(b);
+    });
+    getListings().then((l) => {
+      setListings(l);
+    });
+  }, []);
+
   return (
     <>
       <Meta title="Activity || NFTWORLD | NFT Marketplace Next.js Template" />
@@ -20,7 +33,7 @@ const index = () => {
             Activity
           </h1>
 
-          <Activity_item />
+          <Activity_item bids={bids} listings={listings} />
         </div>
       </section>
     </>

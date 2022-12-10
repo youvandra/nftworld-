@@ -7,9 +7,17 @@ const Price_history = ({ classes, priceHistory }) => {
   const avgPrice = Object.keys(priceHistory).map(
     (month) => priceHistory[month].avgPrice
   );
+
   const numSales = Object.keys(priceHistory).map(
     (month) => priceHistory[month].numSales
   );
+
+  if (monthes.length === 0)
+    return (
+      <p className="text-center text-lg text-jacarta-400 mt-6 font-medium">
+        This NFT has no price history
+      </p>
+    );
 
   return (
     <div className="relative mb-24 w-full">

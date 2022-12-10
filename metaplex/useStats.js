@@ -65,12 +65,10 @@ export const useStats = (address) => {
       ({ purchaseReceiptAddress }) => purchaseReceiptAddress
     );
 
-    const vt = purchases.reduce(
+    return purchases.reduce(
       (a, { price }) => a + price?.basisPoints?.toNumber() / LAMPORTS_PER_SOL,
       0
     );
-
-    setVolumeTraded(vt);
   };
 
   useEffect(() => {
@@ -78,7 +76,9 @@ export const useStats = (address) => {
       setFloorPrice(fp);
     });
 
-    getVolumeTraded().then(() => {});
+    getVolumeTraded().then((vt) => {
+      setVolumeTraded(vt);
+    });
   }, [address, collectionLisings]);
 
   useEffect(() => {
@@ -91,5 +91,5 @@ export const useStats = (address) => {
     getCollectionListings();
   }, [address]);
 
-  return { floorPrice, owners, volumeTraded };
+  return { floorPrice, owners, volumeTraded, collectionLisings };
 };

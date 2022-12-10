@@ -3,10 +3,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Activity_item from "./Activity_item";
 import Image from "next/image";
 import FilterCategoryItem from "../categories/filterCategoryItem";
-
 import "react-tabs/style/react-tabs.css";
 
-const Collection_items = () => {
+const Collection_items = ({ collectionLisings, collectionBids }) => {
   const [itemsTabs, setItemsTabs] = useState(1);
 
   const collectionItemsTabs = [
@@ -69,7 +68,10 @@ const Collection_items = () => {
               </div>
             </TabPanel>
             <TabPanel>
-              <Activity_item />
+              <Activity_item
+                listings={collectionLisings}
+                bids={collectionBids}
+              />
             </TabPanel>
           </Tabs>
         </div>

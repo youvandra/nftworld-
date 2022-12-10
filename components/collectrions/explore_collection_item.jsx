@@ -8,7 +8,6 @@ const Explore_collection_item = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log({ collectiondata, isTrue: collectiondata === [] });
     if (collectiondata.length === 0) return setIsLoading(true);
     setIsLoading(false);
   }, [collectiondata]);

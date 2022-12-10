@@ -51,6 +51,13 @@ const Activity_tab = ({ address }) => {
 
   if (isLoading) return <Loader />;
 
+  if (activities.length === 0)
+    return (
+      <p className="text-center text-lg text-jacarta-400 mt-6 font-medium">
+        This NFT has no activities
+      </p>
+    );
+
   return (
     <>
       {/* <!-- Activity --> */}
