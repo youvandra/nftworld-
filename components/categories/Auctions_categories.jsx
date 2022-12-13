@@ -4,21 +4,23 @@ import Auctions_category_data from "../../data/auctions_category_data";
 import Tippy from "@tippyjs/react";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
 import Link from "next/link";
-import { bidsModalShow } from "../../redux/counterSlice";
-import { useDispatch } from "react-redux";
 import "tippy.js/themes/light.css";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import axios from "axios";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Auctions_categories = () => {
-  const dispatch = useDispatch();
   const [data, setData] = useState(Auctions_category_data.slice(0, 4));
   const [shortData, setShortData] = useState(
     Auctions_category_data.slice(0, 4)
   );
   const [loadMoreBtn, setLoadMoreBtn] = useState(true);
   const { getListings, buyListing } = useAuctionHouse();
+  const router = useRouter();
+  const { publicKey } = useWallet();
 
   const handleloadMore = () => {
     setShortData(data);
@@ -147,7 +149,19 @@ const Auctions_categories = () => {
                         <button
                           className="text-accent font-display text-sm font-semibold"
                           onClick={() => {
-                            buyListing(listing);
+                            toast
+                              .promise(
+                                buyListing(listing),
+                                {
+                                  error: "There was a problem buying NFT",
+                                  loading: "Buying NFT..",
+                                  success: "NFT was purchases successfully",
+                                },
+                                { position: "bottom-right" }
+                              )
+                              .then(() => {
+                                router.push(`/user/${publicKey.toBase58()}`);
+                              });
                           }}
                         >
                           Buy

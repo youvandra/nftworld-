@@ -55,7 +55,10 @@ const User_items = ({ address }) => {
   async function getUserListings() {
     if (!address) return;
     const listing = await getListings({ seller: new PublicKey(address) });
-    setUserListings(listing);
+
+    setUserListings(
+      listing.filter(({ purchaseReceiptAddress }) => !purchaseReceiptAddress)
+    );
   }
 
   async function getUserBids() {

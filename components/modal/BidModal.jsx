@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 const BidModal = ({ onClose, isOpen, nft }) => {
-  const { bid } = useAuctionHouse();
+  const { makeOffer } = useAuctionHouse();
   const { handleSubmit, register } = useForm();
   const [collection, setCollection] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,13 +21,12 @@ const BidModal = ({ onClose, isOpen, nft }) => {
   }
 
   useEffect(() => {
-    console.log(nft);
     if (nft) getCollection(nft.collection.address.toBase58());
   }, [nft]);
 
   async function onSubmit({ price }) {
     setIsLoading(true);
-    bid(nft.mintAddress, price)
+    makeOffer(nft.mintAddress, price)
       .finally(() => {
         setIsLoading(false);
       })

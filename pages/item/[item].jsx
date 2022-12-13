@@ -23,7 +23,7 @@ const Item = () => {
   const router = useRouter();
   const address = router.query.item;
   const { metaplex } = useMetaplex();
-  const { getAuctionHouse } = useAuctionHouse();
+  const { getListings } = useAuctionHouse();
   const [creator, setCreator] = useState();
   const [imageModal, setImageModal] = useState(false);
   const [nft, setNFT] = useState(null);
@@ -34,22 +34,20 @@ const Item = () => {
       .nfts()
       .findByMint({ mintAddress: new PublicKey(address) });
     const _nft = await returnNFTwithMetadata(rawNFT);
-    console.log(_nft);
     setNFT(_nft);
   }
 
   async function getListing() {
-    const auctionHouse = await getAuctionHouse();
-    const listing = await metaplex
-      .auctionHouse()
-      .findListings({ auctionHouse, metadata: nft.metadataAddress });
+    const listing = await getListings({ metadata: nft.metadataAddress });
+
     if (!listing || listing.length === 0) return;
-    const prices = listing.map(
-      ({ price }) => price.basisPoints.toNumber() / LAMPORTS_PER_SOL
-    );
-    const price = Math.max(...prices);
-    const index = prices.indexOf(price);
-    setNFTListing(listing[index]);
+
+    const mostRecent = listing[listing.length - 1];
+
+    console.log({ listing });
+    if (mostRecent.purchaseReceiptAddress) return;
+
+    setNFTListing(mostRecent);
   }
 
   async function getCreator() {
@@ -314,7 +312,7 @@ const Item = () => {
                 {/* <!-- Bid --> */}
 
                 {nftListing && (
-                  <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-2lg border bg-white p-8">
+                  <div className="dark:bg-jacarta-700 mb-8 dark:border-jacarta-600 border-jacarta-100 rounded-2lg border bg-white p-8">
                     <div className="mb-8 sm:flex sm:flex-wrap">
                       {/* <!-- Highest bid --> */}
                       <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
@@ -374,6 +372,13 @@ const Item = () => {
                     </Link>
                   </div>
                 )}
+                <button
+                  className="bg-accent disabled:bg-accent-lighter  hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                  onClick={() => dispatch(bidsModalShow())}
+                >
+                  Make offer
+                </button>
+
                 {/* {
                   <button
                     disabled={!nftListing}
