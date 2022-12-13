@@ -2,22 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { sol } from "@metaplex-foundation/js";
 import { toast } from "react-hot-toast";
 
 const BidModal = ({ onClose, isOpen, nft }) => {
-  console.log({ nft });
   const { makeOffer } = useAuctionHouse();
   const { handleSubmit, register } = useForm();
   const [collection, setCollection] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   async function getCollection(address) {
     axios
       .get(`/api/getCollectionByAddress?address=${address}`)
       .then(({ data }) => {
-        console.log(data);
         setCollection(data);
       });
   }
@@ -30,7 +27,7 @@ const BidModal = ({ onClose, isOpen, nft }) => {
     setIsLoading(true);
     toast
       .promise(
-        makeOffer(nft.mint.address, price),
+        makeOffer(nft.mint.address, sol(Number(price))),
         {
           error: "There was a problem placing your bid",
           loading: "Bidding..",

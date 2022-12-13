@@ -99,8 +99,19 @@ export function useAuctionHouse() {
   }
 
   async function acceptOffer(bid) {
+    const programId = metaplex.programs().getToken().address;
+    const { value: tokens } = await metaplex.connection.getTokenAccountsByOwner(
+      metaplex.identity().publicKey,
+      { mint: bid.asset.mint.address, programId }
+    );
+
+    const sellerToken = await metaplex
+      .tokens()
+      .findTokenByAddress({ address: tokens[0].pubkey });
+    console.log({ sellerToken });
     const auctionHouse = await getAuctionHouse();
-    return metaplex.auctionHouse().sell({ auctionHouse, bid });
+
+    return metaplex.auctionHouse().sell({ auctionHouse, bid, sellerToken });
   }
 
   return {
