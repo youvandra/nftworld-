@@ -3,8 +3,10 @@ import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 const BidModal = ({ onClose, isOpen, nft }) => {
+  console.log({ nft });
   const { makeOffer } = useAuctionHouse();
   const { handleSubmit, register } = useForm();
   const [collection, setCollection] = useState();
@@ -26,12 +28,21 @@ const BidModal = ({ onClose, isOpen, nft }) => {
 
   async function onSubmit({ price }) {
     setIsLoading(true);
-    makeOffer(nft.mintAddress, price)
+    toast
+      .promise(
+        makeOffer(nft.mint.address, price),
+        {
+          error: "There was a problem placing your bid",
+          loading: "Bidding..",
+          success: "Successfully placed a bid",
+        },
+        { position: "bottom-right" }
+      )
       .finally(() => {
         setIsLoading(false);
       })
       .then(() => {
-        router.push("/");
+        onClose();
       });
   }
 

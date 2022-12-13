@@ -17,9 +17,12 @@ import axios from "axios";
 import { useProgram, useNFTs, useSDK } from "@thirdweb-dev/react/solana";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { data } from "autoprefixer";
+import BidModal from "../../components/modal/BidModal";
+import { toast } from "react-hot-toast";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Item = () => {
-  const dispatch = useDispatch();
+  const { publicKey } = useWallet();
   const router = useRouter();
   const address = router.query.item;
   const { metaplex } = useMetaplex();
@@ -28,6 +31,7 @@ const Item = () => {
   const [imageModal, setImageModal] = useState(false);
   const [nft, setNFT] = useState(null);
   const [nftListing, setNFTListing] = useState();
+  const [showBidModal, setShowBidModal] = useState(false);
 
   async function getNFT() {
     const rawNFT = await metaplex
@@ -42,7 +46,9 @@ const Item = () => {
 
     if (!listing || listing.length === 0) return;
 
-    const mostRecent = listing[listing.length - 1];
+    const mostRecent = listing.sort(
+      (a, b) => a.createdAt.toNumber() - b.createdAt.toNumber()
+    )[listing.length - 1];
 
     console.log({ listing });
     if (mostRecent.purchaseReceiptAddress) return;
@@ -134,6 +140,15 @@ const Item = () => {
   return (
     <>
       {/*  <!-- Item --> */}
+      {showBidModal && (
+        <BidModal
+          isOpen={showBidModal}
+          onClose={() => {
+            setShowBidModal(false);
+          }}
+          nft={nft}
+        />
+      )}
       <section className="relative lg:mt-24 lg:pt-24 lg:pb-24 mt-24 pt-12 pb-24">
         <picture className="pointer-events-none absolute inset-0 -z-10 dark:hidden">
           <img
@@ -365,7 +380,21 @@ const Item = () => {
                     <Link href="#">
                       <button
                         className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                        onClick={() => dispatch(bidsModalShow())}
+                        onClick={() => {
+                          toast
+                            .promise(
+                              buyListing(listing),
+                              {
+                                error: "There was a problem buying NFT",
+                                loading: "Buying NFT..",
+                                success: "NFT was purchases successfully",
+                              },
+                              { position: "bottom-right" }
+                            )
+                            .then(() => {
+                              router.push(`/user/${publicKey.toBase58()}`);
+                            });
+                        }}
                       >
                         Purchase
                       </button>
@@ -374,7 +403,7 @@ const Item = () => {
                 )}
                 <button
                   className="bg-accent disabled:bg-accent-lighter  hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                  onClick={() => dispatch(bidsModalShow())}
+                  onClick={() => setShowBidModal(true)}
                 >
                   Make offer
                 </button>

@@ -51,7 +51,7 @@ const ItemsTabs = ({ nft }) => {
     },
   ];
 
-  const getPriceHostory = async () => {
+  const getPriceHistory = async () => {
     if (!nft) return;
     const allListing = await getListings({
       metadata: nft?.metadataAddress,
@@ -72,8 +72,11 @@ const ItemsTabs = ({ nft }) => {
       const month = createdAt.toISOString().slice(0, 7); // get the month and year from the date
       const monthName = getMonthName(month); // get the month name
       acc[monthName] = acc[monthName] || { avgPrice: 0, numSales: 0 };
-      acc[monthName].avgPrice += price;
       acc[monthName].numSales += 1;
+      acc[monthName].avgPrice += price;
+      acc[monthName].avgPrice =
+        acc[monthName].avgPrice / acc[monthName].numSales;
+
       return acc;
     }, {});
 
@@ -82,7 +85,7 @@ const ItemsTabs = ({ nft }) => {
   };
 
   useEffect(() => {
-    getPriceHostory().then((ph) => {
+    getPriceHistory().then((ph) => {
       setPriceHistory(ph);
     });
   }, [nft]);

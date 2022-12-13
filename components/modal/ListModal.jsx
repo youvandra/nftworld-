@@ -3,6 +3,7 @@ import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 const ListModal = ({ onClose, isOpen, nft }) => {
   const { list } = useAuctionHouse();
@@ -27,7 +28,16 @@ const ListModal = ({ onClose, isOpen, nft }) => {
 
   async function onSubmit({ price }) {
     setIsLoading(true);
-    list(nft.mintAddress.toBase58(), price)
+    toast
+      .promise(
+        list(nft.mintAddress.toBase58(), price),
+        {
+          error: "There was a problem listing you item",
+          loading: "Listing your item..",
+          success: "Item was successfully listed",
+        },
+        { position: "bottom-right" }
+      )
       .finally(() => {
         setIsLoading(false);
       })

@@ -973,17 +973,21 @@ const MblNavbar = ({ theme }) => {
                 {/* list NFT */}
                 <Link href={`/list`}>
                   <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                      className="fill-jacarta-700 h-4 w-4 transition-colors dark:fill-white"
-                    >
-                      <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+                    <svg className="icon fill-jacarta-700 dark:fill-white h-4 w-4">
+                      <use xlinkHref={`/icons.svg#icon-listing`}></use>
                     </svg>
                     <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
-                      List NFT
+                      Manage Listings
+                    </span>
+                  </a>
+                </Link>
+                <Link href={`/bid`}>
+                  <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
+                    <svg className="icon fill-jacarta-700 dark:fill-white h-4 w-4">
+                      <use xlinkHref={`/icons.svg#icon-bids`}></use>
+                    </svg>
+                    <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
+                      Manage bids
                     </span>
                   </a>
                 </Link>

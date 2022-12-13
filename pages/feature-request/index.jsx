@@ -20,7 +20,7 @@ export default function index() {
       {
         error: "There was a problem sending you feature request",
         loading: "Sending your request",
-        success: "Your request has been sent successfullly",
+        success: "Your request has been sent successfully",
       },
       { position: "bottom-right" }
     );

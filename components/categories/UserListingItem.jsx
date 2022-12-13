@@ -4,13 +4,13 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import axios from "axios";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { toast } from "react-hot-toast";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import { toast } from "react-hot-toast";
 
-const BidItem = ({ bids, getMyBids }) => {
+export default function UserListingItem({ listings, getMyListings }) {
   const { publicKey } = useWallet();
   const [creator, setCreator] = useState();
-  const { cancelBid } = useAuctionHouse();
+  const { cancelListing } = useAuctionHouse();
 
   const getCreator = async () => {
     const { data } = await axios.get(
@@ -28,15 +28,15 @@ const BidItem = ({ bids, getMyBids }) => {
   return (
     <>
       <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-        {bids.map((bid, i) => {
+        {listings.map((listing, i) => {
+          const itemLink = listing.asset.address.toBase58();
           const {
+            name: title,
             metadata: {
-              name,
               metadata: { image },
             },
-            address,
-          } = bid.asset;
-          const itemLink = address.toBase58();
+          } = listing.asset;
+
           return (
             <article key={i}>
               <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
@@ -73,7 +73,7 @@ const BidItem = ({ bids, getMyBids }) => {
                   <Link href={`/item/${itemLink}`}>
                     <a>
                       <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
-                        {name}
+                        {title}
                       </span>
                     </a>
                   </Link>
@@ -85,20 +85,20 @@ const BidItem = ({ bids, getMyBids }) => {
                     onClick={() => {
                       toast
                         .promise(
-                          cancelBid(bid),
+                          cancelListing(listing),
                           {
-                            error: "There was a problem canceling your bid",
-                            loading: "Canceling your bid..",
-                            success: "Your bid was canceled successfully",
+                            error: "There was a problem canceling your listing",
+                            loading: "Canceling your listing..",
+                            success: "Your listing was canceled successfully",
                           },
                           { position: "bottom-right" }
                         )
                         .then(() => {
-                          getMyBids();
+                          getMyListings();
                         });
                     }}
                   >
-                    Cancel bid
+                    Cancel Listing
                   </button>
                   <Link href={`/item/${itemLink}`}>
                     <a className="group flex items-center">
@@ -118,6 +118,4 @@ const BidItem = ({ bids, getMyBids }) => {
       </div>
     </>
   );
-};
-
-export default BidItem;
+}
