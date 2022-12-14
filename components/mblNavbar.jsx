@@ -9,6 +9,7 @@ import { Connection } from "@solana/web3.js";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import SolanaWallet from "./SolanaWallet";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useAuctionHouse } from "../metaplex/useAuctionHouse";
 require("@solana/wallet-adapter-react-ui/styles.css");
 
 async function getbalance(publicKey) {
@@ -23,13 +24,20 @@ const MblNavbar = ({ theme }) => {
   const router = useRouter();
   const [navItemValue, setNavItemValue] = useState(1);
   const [navText, setnavText] = useState("");
-  const { connected, wallet, publicKey } = useWallet();
+  const { connected, publicKey } = useWallet();
   const [balance, setBalance] = useState(0);
+  const [escrowBalance, setEscrowBalance] = useState(0);
+
+  const { getEscrowBalance, withdrawEscrow } = useAuctionHouse();
 
   useEffect(() => {
     if (!publicKey) return;
     getbalance(publicKey).then((b) => {
       setBalance(b);
+    });
+
+    getEscrowBalance().then((b) => {
+      setEscrowBalance(b.basisPoints.toNumber());
     });
   }, [publicKey]);
 
@@ -927,7 +935,7 @@ const MblNavbar = ({ theme }) => {
                   <span className="dark:text-jacarta-200 text-sm font-medium tracking-tight">
                     Balance
                   </span>
-                  <div className="flex items-center">
+                  <div className="flex mb-3 items-center">
                     <div className="-ml-1 mr-1 h-[1.125rem] w-[1.125rem]">
                       <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023" />
                     </div>
@@ -935,6 +943,25 @@ const MblNavbar = ({ theme }) => {
                       {(balance / 1000000000).toPrecision(4)} SOL
                     </span>
                   </div>
+                  <span className="dark:text-jacarta-200  text-sm font-medium tracking-tight">
+                    Escrow
+                  </span>
+                  <div className="flex items-center">
+                    <div className="-ml-1 mr-1 h-[1.125rem] w-[1.125rem]">
+                      <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023" />
+                    </div>
+                    <span className="text-green text-lg font-bold">
+                      {(escrowBalance / 1000000000).toPrecision(4)} SOL
+                    </span>
+                  </div>
+                  <button
+                    className="bg-accent mt-2 text-sm rounded-full px-3 py-1 font-semibold"
+                    onClick={() => {
+                      withdrawEscrow(escrowBalance / 1000000000);
+                    }}
+                  >
+                    Withdraw
+                  </button>
                 </div>
                 <Link href={`/user/${publicKey.toBase58()}`}>
                   <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">

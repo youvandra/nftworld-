@@ -16,13 +16,11 @@ const ListModal = ({ onClose, isOpen, nft }) => {
     axios
       .get(`/api/getCollectionByAddress?address=${address}`)
       .then(({ data }) => {
-        console.log(data);
         setCollection(data);
       });
   }
 
   useEffect(() => {
-    console.log(nft);
     if (nft) getCollection(nft.collection.address.toBase58());
   }, [nft]);
 

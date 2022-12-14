@@ -12,6 +12,21 @@ export function useAuctionHouse() {
       .findByAddress({ address: new PublicKey(AUCTION_HOUSE_ADDRESS) });
   }
 
+  async function getEscrowBalance() {
+    const { address: auctionHouse } = await getAuctionHouse();
+    return metaplex.auctionHouse().getBuyerBalance({
+      auctionHouse,
+      buyerAddress: metaplex.identity().publicKey,
+    });
+  }
+
+  async function withdrawEscrow(amount) {
+    const auctionHouse = await getAuctionHouse();
+    metaplex
+      .auctionHouse()
+      .withdrawFromBuyerAccount({ auctionHouse, amount: sol(amount) });
+  }
+
   async function getListings(
     args = { seller: undefined, metadata: undefined, mint: undefined }
   ) {
@@ -124,5 +139,7 @@ export function useAuctionHouse() {
     acceptOffer,
     cancelBid,
     cancelListing,
+    getEscrowBalance,
+    withdrawEscrow,
   };
 }

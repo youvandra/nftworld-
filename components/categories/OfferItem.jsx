@@ -6,13 +6,15 @@ import axios from "axios";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-hot-toast";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 export default function OfferItem({ bids, getAllBids }) {
   const { publicKey } = useWallet();
   const [creator, setCreator] = useState();
-  const { acceptOffer, cancelBid } = useAuctionHouse();
+  const { acceptOffer } = useAuctionHouse();
 
   const getCreator = async () => {
+    if (!publicKey) return;
     const { data } = await axios.get(
       `/api/getUserByAddress?address=${publicKey.toBase58()}`
     );
@@ -21,9 +23,8 @@ export default function OfferItem({ bids, getAllBids }) {
   };
 
   useEffect(() => {
-    if (!publicKey) return;
     getCreator();
-  }, publicKey);
+  }, [publicKey]);
 
   return (
     <>
@@ -99,18 +100,16 @@ export default function OfferItem({ bids, getAllBids }) {
                         });
                     }}
                   >
-                    accept offer
+                    Accept offer
                   </button>
-                  <Link href={`/item/${itemLink}`}>
-                    <a className="group flex items-center">
-                      <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
-                        <use xlinkHref="/icons.svg#icon-history"></use>
-                      </svg>
-                      <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
-                        View History
-                      </span>
-                    </a>
-                  </Link>
+                  <span className="font-display  flex gap-1 text-jacarta-700 text-sm hover:text-accent  dark:text-white">
+                    Offer for{" "}
+                    {bid.price.basisPoints.toNumber() / LAMPORTS_PER_SOL}
+                    {""}
+                    <div className=" h-4 w-4">
+                      <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023" />
+                    </div>
+                  </span>
                 </div>
               </div>
             </article>

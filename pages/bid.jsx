@@ -5,7 +5,7 @@ import Loader from "../components/Loader";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useAuctionHouse } from "../metaplex/useAuctionHouse";
 import { useNFTs } from "../metaplex/useNFTs";
-import OfferItem from "../components/categories/offerItem";
+import OfferItem from "../components/categories/OfferItem";
 
 export default function List() {
   const { publicKey } = useWallet();
