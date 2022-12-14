@@ -76,7 +76,7 @@ const BidModal = ({ onClose, isOpen, nft }) => {
               <div className="dark:border-jacarta-600 border-jacarta-100 relative flex items-center border-t border-b py-4">
                 <figure className="mr-5 self-start">
                   <img
-                    src={nft.metadata.image}
+                    src={nft.metadata.image ?? nft.metadata?.metadata?.image}
                     alt="avatar 2"
                     className="rounded-2lg max-h-96 max-w-xs"
                     loading="lazy"

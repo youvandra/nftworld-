@@ -11,6 +11,7 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useWallet } from "@solana/wallet-adapter-react";
+import BidModal from "../modal/BidModal";
 
 const Auctions_categories = () => {
   const [data, setData] = useState(Auctions_category_data.slice(0, 4));
@@ -53,9 +54,19 @@ const Auctions_categories = () => {
   useEffect(() => {
     getNFTListings();
   }, []);
-
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [nft, setNft] = useState();
   return (
     <div>
+      {showBidModal && (
+        <BidModal
+          isOpen={showBidModal}
+          onClose={() => {
+            setShowBidModal(false);
+          }}
+          nft={nft}
+        />
+      )}
       <section className="py-24">
         <div className="container">
           <HeadLine
@@ -166,16 +177,18 @@ const Auctions_categories = () => {
                         >
                           Buy
                         </button>
-                        <Link href={itemLink}>
-                          <a className="group flex items-center">
-                            <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
-                              <use xlinkHref="/icons.svg#icon-history"></use>
-                            </svg>
-                            <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
-                              View History
-                            </span>
-                          </a>
-                        </Link>
+
+                        <button
+                          onClick={() => {
+                            setNft(listing.asset);
+                            setShowBidModal(true);
+                          }}
+                          className="group flex items-center"
+                        >
+                          <span className="group-hover:text-accent font-display dark:text-jacarta-100 text-sm font-semibold">
+                            Make an offer
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </article>
