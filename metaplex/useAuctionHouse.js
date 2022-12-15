@@ -1,15 +1,15 @@
-import { PublicKey, sol } from "@metaplex-foundation/js";
+import { PublicKey, sol, WRAPPED_SOL_MINT } from "@metaplex-foundation/js";
 import { useMetaplex } from "./useMetaplex";
-import { AUCTION_HOUSE_ADDRESS } from "../utils/consts";
 import { returnNFTwithMetadata } from "../utils/returnNFTwithMetadata";
 
 export function useAuctionHouse() {
   const { metaplex } = useMetaplex();
 
   async function getAuctionHouse() {
-    return await metaplex
-      .auctionHouse()
-      .findByAddress({ address: new PublicKey(AUCTION_HOUSE_ADDRESS) });
+    return await metaplex.auctionHouse().findByCreatorAndMint({
+      creator: new PublicKey("CTzfpz3QQ5MUYnGeunfChs5gHzzzThV8JQS44NzJPKrj"),
+      treasuryMint: new PublicKey(WRAPPED_SOL_MINT),
+    });
   }
 
   async function getEscrowBalance() {
@@ -110,7 +110,9 @@ export function useAuctionHouse() {
 
   async function buyListing(listing) {
     const auctionHouse = await getAuctionHouse();
-    return metaplex.auctionHouse().buy({ auctionHouse, listing });
+    return metaplex
+      .auctionHouse()
+      .buy({ auctionHouse, listing, printReceipt: false });
   }
 
   async function acceptOffer(bid) {

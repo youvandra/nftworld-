@@ -3,3 +3,8 @@ export const AUCTION_HOUSE_ADDRESS =
 
 export const SOLSCANCLUSTER = "devnet";
 export const SOLSCANURL = "https://api.solscan.io";
+
+export const ADMIN_ADDRESSESS = [
+  "tHrHUwvMQPTDJaZRffpfFUrAb7rQPKS6ZixKFMh4dDf",
+  "CTzfpz3QQ5MUYnGeunfChs5gHzzzThV8JQS44NzJPKrj",
+];

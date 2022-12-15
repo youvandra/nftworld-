@@ -5,31 +5,91 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { coverflow_data } from "../../data/coverflow_data";
 import Link from "next/link";
-import Image from "next/image";
 import { useAuctionHouse } from "../../metaplex/useAuctionHouse";
 import axios from "axios";
 
 const CoverflowCarousel = () => {
   const [nfts, setNFTs] = useState(coverflow_data);
+  const { getListings } = useAuctionHouse();
 
-  async function getFeaturedNFTs() {
-    const { data } = await axios.get("/api/getFeaturedNFTs");
+  async function getTopNFTs() {
+    const purchases = (await getListings()).filter(
+      ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
+    );
 
-    if (data) {
-      const formatedData = data.map(
-        ({ address, creator: { name, profilePhoto }, ...nft }) => ({
-          id: address,
-          authorImage: profilePhoto,
-          authorName: name,
-          ...nft,
-        })
-      );
-      setNFTs(formatedData);
+    let nftCounts = {};
+
+    // Loop through each purchase and count the number of times each NFT has been purchased
+    for (let purchase of purchases) {
+      let nftAddress = purchase.asset.address.toBase58();
+      if (nftAddress in nftCounts) {
+        nftCounts[nftAddress]++;
+      } else {
+        nftCounts[nftAddress] = 1;
+      }
     }
+
+    // Create an array to store the NFTs sorted by their number of purchases
+    let sortedNFTs = [];
+
+    // Loop through each NFT in the nftCounts object and add it to the sortedNFTs array
+    for (let nftAddress in nftCounts) {
+      sortedNFTs.push({
+        address: nftAddress,
+        count: nftCounts[nftAddress],
+      });
+    }
+
+    // Sort the sortedNFTs array in descending order by the number of purchases
+    sortedNFTs.sort((a, b) => b.count - a.count);
+
+    const newArray = sortedNFTs.map(({ address }) => address);
+
+    //top 10
+    const top10 = purchases.filter(({ asset }) =>
+      newArray.includes(asset.address.toBase58())
+    );
+
+    const formatedNFTs = await Promise.all(
+      top10.map(async ({ asset, sellerAddress }) => {
+        const { data: user } = await axios.get(
+          `/api/getUserByAddress?address=${sellerAddress?.toBase58()}`
+        );
+
+        return {
+          img: asset.metadata.metadata.image,
+          id: asset.address.toBase58(),
+          authorImage: user.profilePhoto,
+          authorName: user.name,
+          title: asset.name,
+          creatorAddress: sellerAddress.toBase58(),
+        };
+      })
+    );
+
+    // Return the top 10 best selling NFTs
+    setNFTs(formatedNFTs);
   }
 
+  // async function getFeaturedNFTs() {
+  //   const { data } = await axios.get("/api/getFeaturedNFTs");
+
+  //   if (data) {
+  //     const formatedData = data.map(
+  //       ({ address, creator: { name, profilePhoto }, ...nft }) => ({
+  //         id: address,
+  //         authorImage: profilePhoto,
+  //         authorName: name,
+  //         ...nft,
+  //       })
+  //     );
+  //     setNFTs(formatedData);
+  //   }
+  // }
+
   useEffect(() => {
-    getFeaturedNFTs();
+    // getFeaturedNFTs();
+    getTopNFTs();
   }, []);
 
   return (

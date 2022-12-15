@@ -23,7 +23,7 @@ const Item = () => {
   const router = useRouter();
   const address = router.query.item;
   const { metaplex } = useMetaplex();
-  const { getListings } = useAuctionHouse();
+  const { getListings, buyListing } = useAuctionHouse();
   const [creator, setCreator] = useState();
   const [imageModal, setImageModal] = useState(false);
   const [nft, setNFT] = useState(null);
@@ -380,7 +380,7 @@ const Item = () => {
                         onClick={() => {
                           toast
                             .promise(
-                              buyListing(listing),
+                              buyListing(nftListing),
                               {
                                 error: "There was a problem buying NFT",
                                 loading: "Buying NFT..",
