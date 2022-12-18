@@ -1,13 +1,14 @@
 import { PublicKey, sol, WRAPPED_SOL_MINT } from "@metaplex-foundation/js";
 import { useMetaplex } from "./useMetaplex";
 import { returnNFTwithMetadata } from "../utils/returnNFTwithMetadata";
+import { OWNER_ADDRESS } from "../utils/consts";
 
 export function useAuctionHouse() {
   const { metaplex } = useMetaplex();
 
   async function getAuctionHouse() {
     return await metaplex.auctionHouse().findByCreatorAndMint({
-      creator: new PublicKey("CTzfpz3QQ5MUYnGeunfChs5gHzzzThV8JQS44NzJPKrj"),
+      creator: new PublicKey(OWNER_ADDRESS),
       treasuryMint: new PublicKey(WRAPPED_SOL_MINT),
     });
   }
@@ -36,6 +37,8 @@ export function useAuctionHouse() {
       .auctionHouse()
       .findListings({ auctionHouse, ...args });
 
+    console.log({ lazyListings });
+
     const liveListings = lazyListings.filter(({ canceledAt }) => !canceledAt);
 
     const loadedListings = await Promise.all(
@@ -63,6 +66,9 @@ export function useAuctionHouse() {
     const lazyBids = await metaplex
       .auctionHouse()
       .findBids({ auctionHouse, ...args });
+
+    console.log({ lazyBids });
+
     const liveBids = lazyBids.filter(({ canceledAt }) => !canceledAt);
 
     const loadedBids = await Promise.all(
@@ -110,9 +116,7 @@ export function useAuctionHouse() {
 
   async function buyListing(listing) {
     const auctionHouse = await getAuctionHouse();
-    return metaplex
-      .auctionHouse()
-      .buy({ auctionHouse, listing, printReceipt: false });
+    return metaplex.auctionHouse().buy({ auctionHouse, listing });
   }
 
   async function acceptOffer(bid) {

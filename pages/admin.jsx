@@ -6,7 +6,7 @@ import Loader from "../components/Loader";
 import { useAuctionHouse } from "../metaplex/useAuctionHouse";
 import { useMetaplex } from "../metaplex/useMetaplex";
 import { ADMIN_ADDRESSESS } from "../utils/consts";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 export default function Admin() {
   const { publicKey } = useWallet();
@@ -17,6 +17,7 @@ export default function Admin() {
 
   useEffect(() => {
     getAuctionHouse().then((ah) => {
+      console.log(ah);
       setAuctionHouse(ah);
     });
   }, []);
@@ -33,7 +34,7 @@ export default function Admin() {
   useEffect(() => {
     if (!publicKey) return;
 
-    if (!ADMIN_ADDRESSESS.includes(publicKey.toBase58())) router.push("/");
+    // if (!ADMIN_ADDRESSESS.includes(publicKey.toBase58())) router.push("/");
   }, [publicKey]);
 
   if (!publicKey)
@@ -49,6 +50,14 @@ export default function Admin() {
         <h1 className="mt-8 mb-12 text-center text-5xl font-bold text-jacarta-200">
           Access denied
         </h1>
+        <button
+          onClick={() => {
+            metaplex.auctionHouse().create({ sellerFeeBasisPoints: 300 });
+          }}
+          className="bg-accent px-3 py-1 rounded-full mt-2"
+        >
+          create
+        </button>
       </div>
     );
   if (!auctionHouse)
@@ -64,8 +73,14 @@ export default function Admin() {
       <h1 className="mt-8 mb-12 text-center text-5xl font-bold">
         Admin section
       </h1>
+      <pre>Auction house address: {auctionHouse.address.toBase58()}</pre>
       <pre>Fee account: {auctionHouse.feeAccountAddress.toBase58()}</pre>
       <pre>Fee account Balance: {feeBalance} SOL</pre>
+      <pre>
+        treasury Withdrawal account:{" "}
+        {auctionHouse.treasuryWithdrawalDestinationAddress.toBase58()}
+      </pre>
+
       <button
         onClick={() => {
           metaplex.system().transferSol({

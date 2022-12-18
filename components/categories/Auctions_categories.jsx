@@ -30,6 +30,7 @@ const Auctions_categories = () => {
 
   const getNFTListings = async () => {
     getListings().then(async (listings) => {
+      console.log(listings);
       const filteredListings = listings.filter(
         ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
       );

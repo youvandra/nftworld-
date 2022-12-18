@@ -14,7 +14,7 @@ const CoverflowCarousel = () => {
 
   async function getTopNFTs() {
     const purchases = (await getListings()).filter(
-      ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
+      ({ purchaseReceiptAddress }) => purchaseReceiptAddress
     );
 
     let nftCounts = {};
