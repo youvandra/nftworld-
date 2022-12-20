@@ -48,6 +48,10 @@ const OwnedItem = () => {
     listedItemsByAddress();
   }, []);
 
+  useEffect(() => {
+    console.log({ sortedtrendingCategoryItemData });
+  }, [sortedtrendingCategoryItemData]);
+
   if (sortedtrendingCategoryItemData?.length === 0) return <Loader />;
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">

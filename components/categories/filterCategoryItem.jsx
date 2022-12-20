@@ -21,10 +21,14 @@ const FilterCategoryItem = () => {
 
   useEffect(() => {
     if (!data) return;
-    console.log(data);
 
     const formatedNFTs = data.map(
-      ({ metadata: { id, image, name: title } }) => ({ id, image, title })
+      ({ metadata: { id, image, name: title, ...metadata } }) => ({
+        id,
+        image,
+        title,
+        metadata,
+      })
     );
     setNFTs(formatedNFTs);
   }, [data]);
