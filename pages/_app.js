@@ -13,6 +13,18 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { ConnectionProvider } from "@solana/wallet-adapter-react";
 import MetaplexProvider from "../metaplex/MetaPlexProvider";
 import { Toaster } from "react-hot-toast";
+import {
+  SolflareWalletAdapter,
+  PhantomWalletAdapter,
+  BraveWalletAdapter,
+  SlopeWalletAdapter,
+  ExodusWalletAdapter,
+  CoinbaseWalletAdapter,
+  LedgerWalletAdapter,
+  SolletExtensionWalletAdapter,
+  MathWalletAdapter,
+  SolongWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
 
 require("@solana/wallet-adapter-react-ui/styles.css");
 // Change the network to the one you want to use: "mainnet-beta", "testnet", "devnet", "localhost" or your own RPC endpoint
@@ -43,6 +55,18 @@ function MyApp({ Component, pageProps }) {
           autoConnect={true}
           network={desiredNetwork}
           wallet={wallet}
+          wallets={[
+            new PhantomWalletAdapter(),
+            new SolflareWalletAdapter(),
+            new BraveWalletAdapter(),
+            new SlopeWalletAdapter(),
+            new ExodusWalletAdapter(),
+            new CoinbaseWalletAdapter(),
+            new LedgerWalletAdapter(),
+            new SolletExtensionWalletAdapter(),
+            new MathWalletAdapter(),
+            new SolongWalletAdapter(),
+          ]}
         >
           <ConnectionProvider endpoint="https://api.devnet.solana.com">
             <ThemeProvider enableSystem={true} attribute="class">
