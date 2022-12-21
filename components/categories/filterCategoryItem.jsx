@@ -6,8 +6,9 @@ import OwnedItem from "./ownedItem";
 import { useNFTs, useProgram } from "@thirdweb-dev/react/solana";
 import { useRouter } from "next/router";
 import Loader from "../Loader";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
-const FilterCategoryItem = () => {
+const FilterCategoryItem = ({ collectionBids, collectionLisings }) => {
   const dispatch = useDispatch();
 
   const [nfts, setNFTs] = useState([]);
@@ -17,21 +18,40 @@ const FilterCategoryItem = () => {
 
   const { program } = useProgram(address);
 
-  const { data } = useNFTs(program);
+  const { data, isLoading } = useNFTs(program);
 
   useEffect(() => {
     if (!data) return;
 
+    const liveListings = collectionLisings.filter(
+      ({ purchaseReceiptAddress }) => !purchaseReceiptAddress
+    );
+
     const formatedNFTs = data.map(
-      ({ metadata: { id, image, name: title, ...metadata } }) => ({
-        id,
-        image,
-        title,
-        metadata,
-      })
+      ({ metadata: { id, image, name: title, ...metadata } }) => {
+        const nft = liveListings.find(
+          (item) => id === item.asset.address.toBase58()
+        );
+        console.log({ nft });
+        if (!nft)
+          return {
+            id,
+            image,
+            title,
+            metadata,
+            price: 0,
+          };
+        return {
+          id,
+          image,
+          title,
+          metadata,
+          price: nft.price.basisPoints.toNumber() / LAMPORTS_PER_SOL,
+        };
+      }
     );
     setNFTs(formatedNFTs);
-  }, [data]);
+  }, [data, collectionLisings, collectionBids]);
 
   useEffect(() => {
     dispatch(updateTrendingCategoryItemData(nfts));

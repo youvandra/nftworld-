@@ -37,8 +37,6 @@ export function useAuctionHouse() {
       .auctionHouse()
       .findListings({ auctionHouse, ...args });
 
-    console.log({ lazyListings });
-
     const liveListings = lazyListings.filter(({ canceledAt }) => !canceledAt);
 
     const loadedListings = await Promise.all(
@@ -66,8 +64,6 @@ export function useAuctionHouse() {
     const lazyBids = await metaplex
       .auctionHouse()
       .findBids({ auctionHouse, ...args });
-
-    console.log({ lazyBids });
 
     const liveBids = lazyBids.filter(({ canceledAt }) => !canceledAt);
 
@@ -129,7 +125,6 @@ export function useAuctionHouse() {
     const sellerToken = await metaplex
       .tokens()
       .findTokenByAddress({ address: tokens[0].pubkey });
-    console.log({ sellerToken });
     const auctionHouse = await getAuctionHouse();
 
     return metaplex.auctionHouse().sell({ auctionHouse, bid, sellerToken });

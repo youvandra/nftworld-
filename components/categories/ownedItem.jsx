@@ -48,11 +48,14 @@ const OwnedItem = () => {
     listedItemsByAddress();
   }, []);
 
-  useEffect(() => {
-    console.log({ sortedtrendingCategoryItemData });
-  }, [sortedtrendingCategoryItemData]);
+  useEffect(() => {}, [sortedtrendingCategoryItemData]);
 
-  if (sortedtrendingCategoryItemData?.length === 0) return <Loader />;
+  if (sortedtrendingCategoryItemData?.length === 0)
+    return (
+      <p className="text-center text-2xl text-jacarta-400 mt-6 font-medium">
+        There are no NFTs
+      </p>
+    );
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
       {sortedtrendingCategoryItemData.map((item) => {

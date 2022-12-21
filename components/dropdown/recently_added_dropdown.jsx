@@ -3,6 +3,7 @@ import Tippy from "@tippyjs/react";
 import {
   updatetrendingCategorySorText,
   updateTrendingCategoryItemByInput,
+  updateTrendingCategoryItemByPriceType,
 } from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";
 import {
@@ -438,7 +439,10 @@ const Recently_added_dropdown = ({ data, dropdownFor }) => {
                 <li key={id}>
                   <button
                     className="dropdown-item font-display dark:hover:bg-jacarta-600 hover:bg-jacarta-50 flex w-full items-center justify-between rounded-xl px-5 py-2 text-left text-sm transition-colors dark:text-white"
-                    onClick={() => setsortActive(id)}
+                    onClick={() => {
+                      setsortActive(id);
+                      dispatch(updateTrendingCategoryItemByPriceType(text));
+                    }}
                   >
                     <span className="text-jacarta-700 dark:text-white">
                       {text}

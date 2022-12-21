@@ -64,7 +64,10 @@ const Collection_items = ({ collectionLisings, collectionBids }) => {
 
             <TabPanel>
               <div>
-                <FilterCategoryItem />
+                <FilterCategoryItem
+                  collectionLisings={collectionLisings}
+                  collectionBids={collectionBids}
+                />
               </div>
             </TabPanel>
             <TabPanel>
