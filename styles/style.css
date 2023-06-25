@@ -1,0 +1,101 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c-auction-category-image {
+  width: 12px;
+  height: 11px;
+}
+
+.c-auction-card-name-style {
+  color: #e42575;
+  font-size: 13px;
+}
+
+.c-auction-fontsize-big {
+  font-size: 25px;
+  font-weight: 600;
+  display: initial;
+}
+
+.c-auction-fontsize-small {
+  font-size: 12px;
+}
+
+.c-auction-time {
+  width: 33%;
+  font-size: 12px;
+}
+
+.c-auction-time-border {
+  display: flex;
+  background-color: #323c9d7a;
+  padding: 15px;
+  margin: 0 10px 0 10px;
+  border-radius: 10px;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.c-auctin-float {
+  float: right;
+}
+
+.c-auction-card {
+  box-shadow: 0 3px 12px 0 rgb(131 151 140);
+  padding-bottom: 20px;
+  border-radius: 20px;
+}
+
+.c-auction-card-date {
+  color: #83978c;
+}
+
+.c-auction-cardPriceContainer {
+  display: flex;
+  align-items: center;
+}
+
+.c-auction-card-timeTxt {
+  text-align: right;
+}
+
+.c-auction-data-responsive {
+  display: flex;
+}
+
+@media (max-width: 1025px) {
+  .c-auction-data-responsive {
+    display: block;
+  }
+}
+
+.c-item-auction {
+  width: 80px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #03040e7a;
+}
+
+.c-item-auction-bid-input {
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #03040e7a;
+}
+
+.c-item-auction-text-color {
+  color: #ffaa00;
+}
+
+.c-item-auction-date {
+  width: 320px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #03040e7a;
+}
+
+.c-item-auction-end-text-color {
+  color: #8186b1;
+}

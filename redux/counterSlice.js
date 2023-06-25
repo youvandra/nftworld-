@@ -104,21 +104,6 @@ export const counterSlice = createSlice({
         state.sortedtrendingCategoryItemData = state.trendingCategoryItemData;
       }
     },
-    updateTrendingCategoryItemByPriceType: (state, action) => {
-      const text = action.payload;
-      if (text === "Any") {
-        state.sortedtrendingCategoryItemData = state.trendingCategoryItemData;
-      } else if (text === "Listed") {
-        state.sortedtrendingCategoryItemData =
-          state.trendingCategoryItemData.filter((item) => item?.price > 0);
-      } else if (text === "Not for sale") {
-        state.sortedtrendingCategoryItemData =
-          state.trendingCategoryItemData.filter((item) => item.price === 0);
-      } else {
-        state.sortedtrendingCategoryItemData = state.trendingCategoryItemData;
-      }
-    },
-
     collectCollectionData: (state, action) => {
       const data = action.payload;
       state.collectiondata = data;
@@ -191,7 +176,6 @@ export const {
   updatetrendingCategorySorText,
   updateTrendingCategoryItemData,
   updateTrendingCategoryItemByInput,
-  updateTrendingCategoryItemByPriceType,
   collectCollectionData,
   updateCollectionData,
   collectRenkingData,

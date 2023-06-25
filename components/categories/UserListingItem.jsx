@@ -16,7 +16,7 @@ export default function UserListingItem({ listings, getMyListings }) {
   const getCreator = async () => {
     if (!publicKey) return;
     const { data } = await axios.get(
-      `/api/getUserByAddress?address=${publicKey.toBase58()}`
+      `/api/getUserbyAddress?address=${publicKey.toBase58()}`
     );
     if (!data) return;
     setCreator(data);
@@ -101,14 +101,14 @@ export default function UserListingItem({ listings, getMyListings }) {
                   >
                     Cancel Listing
                   </button>
-                  <span className="font-display  flex gap-1 text-jacarta-700 text-sm hover:text-accent  dark:text-white">
+                  <div className="font-display  flex gap-1 text-jacarta-700 text-sm hover:text-accent  dark:text-white">
                     Listed for{" "}
                     {listing.price.basisPoints.toNumber() / LAMPORTS_PER_SOL}
                     {""}
                     <div className=" h-4 w-4">
                       <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=023" />
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </article>

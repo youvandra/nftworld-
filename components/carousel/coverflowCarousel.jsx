@@ -53,7 +53,7 @@ const CoverflowCarousel = () => {
     const formatedNFTs = await Promise.all(
       top10.map(async ({ asset, sellerAddress }) => {
         const { data: user } = await axios.get(
-          `/api/getUserByAddress?address=${sellerAddress?.toBase58()}`
+          `/api/getUserbyAddress?address=${sellerAddress?.toBase58()}`
         );
 
         return {
@@ -134,12 +134,12 @@ const CoverflowCarousel = () => {
           }}
           className="swiper coverflow-slider !py-5"
         >
-          {nfts.map((item) => {
+          {nfts.map((item, key) => {
             const { img, id, authorImage, authorName, title, creatorAddress } =
               item;
             const itemLink = id;
             return (
-              <SwiperSlide key={id}>
+              <SwiperSlide key={key}>
                 <article>
                   <div className="block overflow-hidden rounded-2.5xl bg-white shadow-md transition-shadow hover:shadow-lg dark:bg-jacarta-700">
                     <figure className="relative">

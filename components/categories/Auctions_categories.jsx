@@ -37,7 +37,7 @@ const Auctions_categories = () => {
       const formatedLisings = await Promise.all(
         filteredListings.map(async (listing) => {
           const { data: user } = await axios.get(
-            `/api/getUserByAddress?address=${listing.sellerAddress?.toBase58()}`
+            `/api/getUserbyAddress?address=${listing.sellerAddress?.toBase58()}`
           );
           return {
             listing,

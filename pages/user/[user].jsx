@@ -16,7 +16,6 @@ const User = () => {
   const [{ coverPhoto, icon, image, text, title, userId }, setUser] = useState(
     user_data[0]
   );
-
   const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -36,7 +35,7 @@ const User = () => {
 
   async function getUser() {
     const { data } = await axios.get(
-      `/api/getUserByAddress?address=${address}`
+      `/api/getUserbyAddress?address=${address}`
     );
     if (data) {
       const formatedUser = {

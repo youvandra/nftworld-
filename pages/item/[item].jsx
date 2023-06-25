@@ -15,6 +15,7 @@ import axios from "axios";
 import { useProgram, useNFTs, useSDK } from "@thirdweb-dev/react/solana";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import BidModal from "../../components/modal/BidModal";
+import AuctionModal from "../../components/modal/AuctionModal";
 import { toast } from "react-hot-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
 
@@ -29,6 +30,7 @@ const Item = () => {
   const [nft, setNFT] = useState(null);
   const [nftListing, setNFTListing] = useState();
   const [showBidModal, setShowBidModal] = useState(false);
+  const [auctionModal, setAuctionModal] = useState(false);
 
   async function getNFT() {
     const rawNFT = await metaplex
@@ -56,7 +58,7 @@ const Item = () => {
   async function getCreator() {
     axios
       .get(
-        `/api/getUserByAddress?address=${nft?.creators[0]?.address?.toBase58()}`
+        `/api/getUserbyAddress?address=${nft?.creators[0]?.address?.toBase58()}`
       )
       .then(({ data }) => {
         setCreator(data);
@@ -73,7 +75,7 @@ const Item = () => {
     );
     const ownerAddress = await collection.ownerOf(nft?.address?.toBase58());
     axios
-      .get(`/api/getUserByAddress?address=${ownerAddress}`)
+      .get(`/api/getUserbyAddress?address=${ownerAddress}`)
       .then(({ data }) => {
         setOwner(data);
       });
@@ -89,7 +91,7 @@ const Item = () => {
     if (!nftListing) return;
     axios
       .get(
-        `/api/getUserByAddress?address=${nftListing?.sellerAddress?.toBase58()}`
+        `/api/getUserbyAddress?address=${nftListing?.sellerAddress?.toBase58()}`
       )
       .then(({ data }) => {
         setSeller(data);
@@ -146,6 +148,17 @@ const Item = () => {
           nft={nft}
         />
       )}
+
+      {auctionModal && (
+        <AuctionModal
+          isOpen={auctionModal}
+          onClose={() => {
+            setAuctionModal(false);
+          }}
+          nft={nft}
+        />
+      )}
+
       <section className="relative lg:mt-24 lg:pt-24 lg:pb-24 mt-24 pt-12 pb-24">
         <picture className="pointer-events-none absolute inset-0 -z-10 dark:hidden">
           <img
@@ -399,12 +412,18 @@ const Item = () => {
                   </div>
                 )}
                 <button
-                  className="bg-accent disabled:bg-accent-lighter  hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                  className="bg-accent disabled:bg-accent-lighter  hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all mb-3"
                   onClick={() => setShowBidModal(true)}
                 >
                   Make offer
                 </button>
 
+                <button
+                  className="bg-accent disabled:bg-accent-lighter  hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                  onClick={() => setAuctionModal(true)}
+                >
+                  Auction
+                </button>
                 {/* {
                   <button
                     disabled={!nftListing}
