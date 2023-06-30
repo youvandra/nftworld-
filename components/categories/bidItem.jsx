@@ -15,7 +15,7 @@ const BidItem = ({ bids, getMyBids }) => {
 
   const getCreator = async () => {
     const { data } = await axios.get(
-      `/api/getUserbyAddress?address=${publicKey.toBase58()}`
+      `/api/getUserByAddress?address=${publicKey.toBase58()}`
     );
     if (!data) return;
     setCreator(data);

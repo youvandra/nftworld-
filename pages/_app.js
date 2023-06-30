@@ -31,7 +31,7 @@ require("@solana/wallet-adapter-react-ui/styles.css");
 // Change the network to the one you want to use: "mainnet-beta", "testnet", "devnet", "localhost" or your own RPC endpoint
 const desiredNetwork = "devnet";
 const WALLETS = [
-  new PhantomWalletAdapter(),
+  // new PhantomWalletAdapter(),
   new SolflareWalletAdapter(),
   new BraveWalletAdapter(),
   new SlopeWalletAdapter(),

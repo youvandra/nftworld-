@@ -16,7 +16,7 @@ import Loader from "../Loader";
 
 const getUser = async (address) => {
   const { data: user } = await axios.get(
-    `/api/getUserbyAddress?address=${address?.toBase58()}`
+    `/api/getUserByAddress?address=${address?.toBase58()}`
   );
 
   return user;

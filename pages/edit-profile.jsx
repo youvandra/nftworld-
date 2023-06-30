@@ -51,7 +51,7 @@ const Edit_user = () => {
 
   const getUser = async () => {
     const { data: user } = await axios.get(
-      `/api/getUserbyAddress?address=${publicKey.toBase58()}`
+      `/api/getUserByAddress?address=${publicKey.toBase58()}`
     );
     if (!user) return;
     setCurrentDetails(user);

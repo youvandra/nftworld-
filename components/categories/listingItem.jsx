@@ -20,7 +20,7 @@ export default function ListingItem({
   async function getUser() {
     if (!sellerAddress) return;
     const { data } = await axios.get(
-      `/api/getUserbyAddress?address=${sellerAddress}`
+      `/api/getUserByAddress?address=${sellerAddress}`
     );
     if (data) {
       const formatedUser = {

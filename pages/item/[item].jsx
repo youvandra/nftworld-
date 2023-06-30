@@ -58,7 +58,7 @@ const Item = () => {
   async function getCreator() {
     axios
       .get(
-        `/api/getUserbyAddress?address=${nft?.creators[0]?.address?.toBase58()}`
+        `/api/getUserByAddress?address=${nft?.creators[0]?.address?.toBase58()}`
       )
       .then(({ data }) => {
         setCreator(data);
@@ -75,7 +75,7 @@ const Item = () => {
     );
     const ownerAddress = await collection.ownerOf(nft?.address?.toBase58());
     axios
-      .get(`/api/getUserbyAddress?address=${ownerAddress}`)
+      .get(`/api/getUserByAddress?address=${ownerAddress}`)
       .then(({ data }) => {
         setOwner(data);
       });
@@ -91,7 +91,7 @@ const Item = () => {
     if (!nftListing) return;
     axios
       .get(
-        `/api/getUserbyAddress?address=${nftListing?.sellerAddress?.toBase58()}`
+        `/api/getUserByAddress?address=${nftListing?.sellerAddress?.toBase58()}`
       )
       .then(({ data }) => {
         setSeller(data);

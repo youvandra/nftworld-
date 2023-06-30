@@ -53,7 +53,7 @@ const CoverflowCarousel = () => {
     const formatedNFTs = await Promise.all(
       top10.map(async ({ asset, sellerAddress }) => {
         const { data: user } = await axios.get(
-          `/api/getUserbyAddress?address=${sellerAddress?.toBase58()}`
+          `/api/getUserByAddress?address=${sellerAddress?.toBase58()}`
         );
 
         return {

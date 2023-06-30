@@ -16,7 +16,7 @@ export default function UserListingItem({ listings, getMyListings }) {
   const getCreator = async () => {
     if (!publicKey) return;
     const { data } = await axios.get(
-      `/api/getUserbyAddress?address=${publicKey.toBase58()}`
+      `/api/getUserByAddress?address=${publicKey.toBase58()}`
     );
     if (!data) return;
     setCreator(data);

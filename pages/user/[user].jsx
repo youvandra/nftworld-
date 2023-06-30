@@ -35,7 +35,7 @@ const User = () => {
 
   async function getUser() {
     const { data } = await axios.get(
-      `/api/getUserbyAddress?address=${address}`
+      `/api/getUserByAddress?address=${address}`
     );
     if (data) {
       const formatedUser = {
