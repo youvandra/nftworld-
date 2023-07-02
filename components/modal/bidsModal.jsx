@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { bidsModalHide } from "../../redux/counterSlice";
 import { Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { SOLANA_RPC_NODE } from "../../utils/consts";
 
 async function getBalance(publicKey) {
-  const connection = new Connection("https://api.devnet.solana.com");
+  const connection = new Connection(SOLANA_RPC_NODE);
   return await connection.getBalance(publicKey);
 }
 

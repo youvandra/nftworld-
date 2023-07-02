@@ -26,10 +26,10 @@ import {
   MathWalletAdapter,
   SolongWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import { SOLANA_RPC_NODE, THIRDWEB_DESIRED_NODE } from "../utils/consts";
 
 require("@solana/wallet-adapter-react-ui/styles.css");
-// Change the network to the one you want to use: "mainnet-beta", "testnet", "devnet", "localhost" or your own RPC endpoint
-const desiredNetwork = "devnet";
+
 const WALLETS = [
   // new PhantomWalletAdapter(),
   new SolflareWalletAdapter(),
@@ -66,11 +66,11 @@ function MyApp({ Component, pageProps }) {
       <Provider store={store}>
         <ThirdwebProvider
           autoConnect={true}
-          network={desiredNetwork}
+          network={THIRDWEB_DESIRED_NODE}
           wallet={wallet}
           wallets={WALLETS}
         >
-          <ConnectionProvider endpoint="https://api.devnet.solana.com">
+          <ConnectionProvider endpoint={SOLANA_RPC_NODE}>
             <ThemeProvider enableSystem={true} attribute="class">
               <MetaMaskProvider>
                 <MetaplexProvider>

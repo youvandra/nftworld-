@@ -1,8 +1,13 @@
 export const AUCTION_HOUSE_ADDRESS =
   "H417SNobqf9GChHiGsLqwTKfcYpTpLHLrEehMQr7dkXf";
 
-export const SOLSCANCLUSTER = "devnet";
+export const SOLANA_RPC_NODE =
+  "https://wispy-intensive-breeze.solana-devnet.discover.quiknode.pro/3cfe3f815b984972e7d4ccc353c4824f330362f9/";
+export const SOLSCANCLUSTER = SOLANA_RPC_NODE;
 export const SOLSCANURL = "https://api.solscan.io";
+
+// "mainnet-beta", "testnet", "devnet",
+export const THIRDWEB_DESIRED_NODE = "devnet";
 
 export const ADMIN_ADDRESSESS = [
   "tHrHUwvMQPTDJaZRffpfFUrAb7rQPKS6ZixKFMh4dDf",
