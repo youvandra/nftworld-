@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { bidsModalHide } from "../../redux/counterSlice";
-import { Connection } from "@solana/web3.js";
+import { Connection, clusterApiUrl } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { SOLANA_RPC_NODE } from "../../utils/consts";
+import { THIRDWEB_DESIRED_NODE } from "../../utils/consts";
 
 async function getBalance(publicKey) {
-  const connection = new Connection(SOLANA_RPC_NODE);
+  const connection = new Connection(clusterApiUrl(THIRDWEB_DESIRED_NODE));
   return await connection.getBalance(publicKey);
 }
 

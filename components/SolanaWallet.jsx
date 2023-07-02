@@ -9,9 +9,9 @@ import { Network } from "./modal/general_modal/styles";
 import { ethers, providers } from "ethers";
 import UserId from "./userId";
 import Link from "next/link";
-import { Connection } from "@solana/web3.js";
+import { Connection, clusterApiUrl } from "@solana/web3.js";
 import { useAuctionHouse } from "../metaplex/useAuctionHouse";
-import { THIRDWEB_DESIRED_NODE } from "../utils/consts";
+import { SOLANA_RPC_NODE, THIRDWEB_DESIRED_NODE } from "../utils/consts";
 
 export default function SolanaWallet() {
   const { connect, connected, connecting, disconnect, wallet, publicKey } =
@@ -30,7 +30,7 @@ export default function SolanaWallet() {
   const { getEscrowBalance, withdrawEscrow } = useAuctionHouse();
 
   async function getbalance(pKey) {
-    const connection = new Connection(THIRDWEB_DESIRED_NODE);
+    const connection = new Connection(clusterApiUrl(THIRDWEB_DESIRED_NODE));
     return await connection.getBalance(pKey);
   }
 
