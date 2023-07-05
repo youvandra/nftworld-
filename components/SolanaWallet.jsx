@@ -200,7 +200,7 @@ export default function SolanaWallet() {
                 <p>Solana</p>
               </Network>
             </Col>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Network onClick={() => openETH()}>
                 <svg
                   width="32"
@@ -232,7 +232,7 @@ export default function SolanaWallet() {
                 </svg>
                 <p>Ethereum</p>
               </Network>
-            </Col>
+            </Col> */}
           </Row>
         </ModalComponent>
 
