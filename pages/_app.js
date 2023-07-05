@@ -31,7 +31,7 @@ import { SOLANA_RPC_NODE, THIRDWEB_DESIRED_NODE } from "../utils/consts";
 require("@solana/wallet-adapter-react-ui/styles.css");
 
 const WALLETS = [
-  // new PhantomWalletAdapter(),
+  new PhantomWalletAdapter(),
   new SolflareWalletAdapter(),
   new BraveWalletAdapter(),
   new SlopeWalletAdapter(),
