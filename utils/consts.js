@@ -1,8 +1,8 @@
 export const AUCTION_HOUSE_ADDRESS =
   "H417SNobqf9GChHiGsLqwTKfcYpTpLHLrEehMQr7dkXf";
 
-export const SOLANA_RPC_NODE =
-  "https://dry-omniscient-sound.solana-devnet.quiknode.pro/0c43b7ede7c26124b53db25cc65c1f018abd195e/";
+// export const SOLANA_RPC_NODE = "https://dry-omniscient-sound.solana-devnet.quiknode.pro/0c43b7ede7c26124b53db25cc65c1f018abd195e/";
+export const SOLANA_RPC_NODE = "https://api.devnet.solana.com"
 export const SOLSCANCLUSTER = SOLANA_RPC_NODE;
 export const SOLSCANURL = "https://api.solscan.io";
 
